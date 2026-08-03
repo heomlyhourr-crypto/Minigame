@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Telegram Scratch Game</title>
+  
+  <!-- Telegram Web App SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  
+  <!-- Firebase Libraries (v8) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Header: សមតុល្យប្រាក់ -->
+    <div class="header">
+      <div class="user-info">
+        <span id="user-name">អ្នកលេង</span>
+      </div>
+      <div class="balance-box">
+        <span>💰 <span id="balance">0</span> ៛</span>
+      </div>
+    </div>
+
+    <!-- ជម្រើសសន្លឹកឆ្នោត -->
+    <div class="ticket-selector">
+      <button class="ticket-btn active" onclick="selectPrice(1000)">1,000 ៛</button>
+      <button class="ticket-btn" onclick="selectPrice(2000)">2,000 ៛</button>
+      <button class="ticket-btn" onclick="selectPrice(10000)">10,000 ៛</button>
+    </div>
+
+    <!-- ផ្ទាំងកោស (Scratch Card) -->
+    <div class="scratch-card-container">
+      <div id="prize-text" class="prize-text">???</div>
+      <canvas id="scratch-canvas"></canvas>
+    </div>
+
+    <!-- ប៊ូតុងទិញ -->
+    <button id="buy-btn" class="main-btn" onclick="buyTicket()">ទិញសន្លឹកឆ្នោត</button>
+
+    <!-- Navigation Menu ខាងក្រោម -->
+    <div class="nav-bar">
+      <a href="index.html" class="nav-item active">🎮 ហ្គេម</a>
+      <a href="wallet.html" class="nav-item">💳 កាបូបលុយ</a>
+      <a href="history.html" class="nav-item">📜 ប្រវត្តិ</a>
+    </div>
+  </div>
+
+  <!-- ភ្ជាប់ JavaScript Files តាមលំដាប់ -->
+  <script src="firebase.js"></script>
+  <script src="telegram.js"></script>
+  <script src="scratch.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
