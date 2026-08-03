@@ -1,60 +1,282 @@
 <!DOCTYPE html>
 <html lang="km">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Telegram Scratch Game</title>
-  
-  <!-- Telegram Web App SDK -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  
-  <!-- Firebase Libraries (v8) -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-  
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>កងចក្រសំណាង - Blogger Style</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Khmer OS Battambang', Arial, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding-bottom: 70px; /* Space for bottom nav */
+        }
+
+        /* Blogger Header Style */
+        header {
+            width: 100%;
+            background-color: #ff5722; /* Blogger Orange */
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* User Profile & Balance Area */
+        .user-info {
+            width: 90%;
+            max-width: 400px;
+            background: white;
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .balance {
+            font-size: 22px;
+            color: #2e7d32;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        /* Bet Selection Buttons */
+        .bet-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-bet {
+            background-color: #e0e0e0;
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-bet.active {
+            background-color: #ff5722;
+            color: white;
+            border-color: #d84315;
+        }
+
+        /* Game Box Container */
+        .game-card {
+            width: 90%;
+            max-width: 400px;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        /* Canvas Scratch Area */
+        .scratch-box {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin: 15px auto;
+            border: 2px dashed #ff5722;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #fff8e1;
+        }
+
+        .prize-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .prize-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            width: 80%;
+            margin-bottom: 10px;
+        }
+
+        .prize-number {
+            background: #ffe0b2;
+            padding: 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+            cursor: pointer;
+        }
+
+        .btn-buy {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        /* Bottom Navigation Bar */
+        nav.bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: #666;
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .nav-item.active {
+            color: #ff5722;
+        }
+    </style>
 </head>
 <body>
 
-  <div class="app-container">
-    <!-- Header: សមតុល្យប្រាក់ -->
-    <div class="header">
-      <div class="user-info">
-        <span id="user-name">អ្នកលេង</span>
-      </div>
-      <div class="balance-box">
-        <span>💰 <span id="balance">0</span> ៛</span>
-      </div>
+    <header>
+        កងចក្រសំណាង Mini Game
+    </header>
+
+    <!-- User Information -->
+    <div class="user-info">
+        <div>អ្នកលេង Demo</div>
+        <div class="balance" id="userBalance">💰 10,000 ៛</div>
+
+        <div class="bet-buttons">
+            <button class="btn-bet active" onclick="selectBet(this, 1000)">1,000 ៛</button>
+            <button class="btn-bet" onclick="selectBet(this, 2000)">2,000 ៛</button>
+            <button class="btn-bet" onclick="selectBet(this, 10000)">10,000 ៛</button>
+        </div>
     </div>
 
-    <!-- ជម្រើសសន្លឹកឆ្នោត -->
-    <div class="ticket-selector">
-      <button class="ticket-btn active" onclick="selectPrice(1000)">1,000 ៛</button>
-      <button class="ticket-btn" onclick="selectPrice(2000)">2,000 ៛</button>
-      <button class="ticket-btn" onclick="selectPrice(10000)">10,000 ៛</button>
+    <!-- Main Game Card -->
+    <div class="game-card">
+        <div class="scratch-box">
+            <!-- Under Layer (Prize Info) -->
+            <div class="prize-layer">
+                <div class="prize-grid">
+                    <div class="prize-number" id="n1">12</div>
+                    <div class="prize-number" id="n2">45</div>
+                    <div class="prize-number" id="n3">78</div>
+                    <div class="prize-number" id="n4">34</div>
+                    <div class="prize-number" id="n5">X2</div>
+                    <div class="prize-number" id="n6">89</div>
+                </div>
+                <div style="font-weight: bold; color: #d32f2f;" id="prizeStatus">ឈ្នះ ៥,០០០ ៛</div>
+            </div>
+
+            <!-- Scratch Canvas Layer -->
+            <canvas id="scratchCanvas"></canvas>
+        </div>
+
+        <button class="btn-buy" onclick="buyTicket()">ទិញសន្លឹកឆ្នោត</button>
     </div>
 
-    <!-- ផ្ទាំងកោស (Scratch Card) -->
-    <div class="scratch-card-container">
-      <div id="prize-text" class="prize-text">???</div>
-      <canvas id="scratch-canvas"></canvas>
-    </div>
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item active">🎮 ហ្គេម</a>
+        <a href="wallet.html" class="nav-item">💳 កាបូបលុយ</a>
+        <a href="history.html" class="nav-item">📜 ប្រវត្តិ</a>
+    </nav>
 
-    <!-- ប៊ូតុងទិញ -->
-    <button id="buy-btn" class="main-btn" onclick="buyTicket()">ទិញសន្លឹកឆ្នោត</button>
+    <script>
+        const canvas = document.getElementById('scratchCanvas');
+        const ctx = canvas.getContext('2d');
+        let isScratching = false;
 
-    <!-- Navigation Menu ខាងក្រោម -->
-    <div class="nav-bar">
-      <a href="index.html" class="nav-item active">🎮 ហ្គេម</a>
-      <a href="wallet.html" class="nav-item">💳 កាបូបលុយ</a>
-      <a href="history.html" class="nav-item">📜 ប្រវត្តិ</a>
-    </div>
-  </div>
+        function initCanvas() {
+            canvas.width = canvas.parentElement.offsetWidth;
+            canvas.height = canvas.parentElement.offsetHeight;
+            ctx.fillStyle = '#b0bec5'; // ពណ៌ប្រាក់សាមញ្ញ
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#37474f';
+            ctx.font = '16px Khmer OS Battambang';
+            ctx.textAlign = 'center';
+            ctx.fillText('កោសទីនេះ', canvas.width / 2, canvas.height / 2);
+        }
 
-  <!-- ភ្ជាប់ JavaScript Files តាមលំដាប់ -->
-  <script src="firebase.js"></script>
-  <script src="telegram.js"></script>
-  <script src="scratch.js"></script>
-  <script src="app.js"></script>
+        function scratch(e) {
+            if (!isScratching) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.arc(x, y, 15, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        canvas.addEventListener('mousedown', () => isScratching = true);
+        canvas.addEventListener('mouseup', () => isScratching = false);
+        canvas.addEventListener('mousemove', scratch);
+        canvas.addEventListener('touchstart', (e) => { isScratching = true; scratch(e); });
+        canvas.addEventListener('touchend', () => isScratching = false);
+        canvas.addEventListener('touchmove', scratch);
+
+        function selectBet(btn, amount) {
+            document.querySelectorAll('.btn-bet').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function buyTicket() {
+            ctx.globalCompositeOperation = 'source-over';
+            initCanvas();
+            document.getElementById('n1').innerText = Math.floor(Math.random() * 89 + 10);
+            document.getElementById('n2').innerText = Math.floor(Math.random() * 89 + 10);
+            document.getElementById('n3').innerText = Math.floor(Math.random() * 89 + 10);
+        }
+
+        window.onload = initCanvas;
+    </script>
 </body>
 </html>
