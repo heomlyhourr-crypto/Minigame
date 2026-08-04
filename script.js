@@ -24,7 +24,7 @@ if (tg) {
 
 // ព័ត៌មាន User ពី Telegram
 let user = tg?.initDataUnsafe?.user || {
-    id: 12345678,
+    id: 6995747279,
     first_name: "អ្នកប្រើប្រាស់",
     last_name: ""
 };
