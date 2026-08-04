@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mini Game - ឆ្នោតកោសសំណាង</title>
     
-    <!-- SDKs: Telegram & Firebase -->
+    <!-- ១. Telegram WebApp SDK (ត្រូវដាក់មុនគេបង្អស់) -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <!-- ២. Firebase Compat SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
@@ -120,11 +122,11 @@
                 <div class="modal-body">
                     <h4>📥 សំណើបញ្ចូលប្រាក់</h4>
                     <input type="number" id="deposit-amount" placeholder="ចំនួនប្រាក់ (៛)" class="admin-input">
-                    <button id="submit-deposit-btn" class="btn-emerald" style="width:100%; margin:8px 0 16px;">ផ្ញើRequest</button>
+                    <button id="submit-deposit-btn" class="btn-emerald" style="width:100%; margin:8px 0 16px;">ផ្ញើ Request</button>
                     <hr style="border-color:#334155;">
                     <h4 style="margin-top:8px;">📤 សំណើដកប្រាក់</h4>
                     <input type="number" id="withdraw-amount" placeholder="ចំនួនប្រាក់ត្រូវដក (៛)" class="admin-input">
-                    <button id="submit-withdraw-btn" class="btn-danger" style="width:100%; margin-top:8px;">ផ្ញើRequest ដក</button>
+                    <button id="submit-withdraw-btn" class="btn-danger" style="width:100%; margin-top:8px;">ផ្ញើ Request ដក</button>
                 </div>
             </div>
         </div>
@@ -178,6 +180,7 @@
         </div>
     </div>
 
+    <!-- ៣. ដាក់ script.js នៅខាងក្រោមគេបង្អស់ -->
     <script src="script.js"></script>
 </body>
 </html>
