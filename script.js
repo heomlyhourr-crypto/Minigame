@@ -1,3 +1,57 @@
+// ==========================================
+// 1. CONFIGURATION & FIREBASE INITIALIZATION
+// ==========================================
+let BOT_TOKEN = "8840822540:AAHA_Tu065Ham9PIrp7BJS13wntlujoglqI"; // Token ដែលអ្នកទើបផ្ដល់ជូន
+let ADMIN_CHAT_ID = "6995747279"; // ID របស់អ្នក
+
+// ទាញយកទិន្នន័យបម្រុងទុកពី Firebase Node 'botToken' (បើមានការផ្លាស់ប្តូរថ្ងៃក្រោយ)
+firebase.database().ref('botToken').once('value', (snapshot) => {
+    if (snapshot.exists()) {
+        const configData = snapshot.val();
+        if (configData.botToken) {
+            BOT_TOKEN = configData.botToken;
+        }
+        if (configData.adminChatId) {
+            ADMIN_CHAT_ID = configData.adminChatId.toString();
+        }
+    }
+});
+
+// ==========================================
+// 2. TELEGRAM MESSAGE SENDER
+// ==========================================
+function sendTelegramMessage(chatId, text) {
+  if (!BOT_TOKEN) return;
+  fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: chatId, text: text, parse_mode: 'HTML' })
+  }).catch(err => console.error("Error sending TG message:", err));
+}
+
+// ==========================================
+// 3. MODAL CONTROLS (បន្តកូដរបស់អ្នកនៅទីនេះ)
+// ==========================================
+const modals = {
+    wallet: { btn: "wallet-btn", modal: "wallet-modal" },
+    history: { btn: "history-btn", modal: "history-modal" },
+    admin: { btn: "admin-btn", modal: "admin-modal" }
+};
+
+Object.values(modals).forEach(item => {
+    const btn = document.getElementById(item.btn);
+    const modal = document.getElementById(item.modal);
+    if (btn && modal) {
+        btn.addEventListener("click", () => modal.classList.remove("hidden"));
+    }
+});
+
+document.querySelectorAll(".close-modal").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+        e.target.closest(".modal-backdrop").classList.add("hidden");
+    });
+});
+
 // 1. Firebase Config
 const firebaseConfig = {
     apiKey: "AIzaSyCcGDjnR4gjlvW5eKMJClFSmvZePi7lQh0",
@@ -202,62 +256,89 @@ function generateGameData() {
     }
 }
 
-// គូរស្រទាប់ប្រាក់សម្រាប់កោស
-function initCanvas() {
-    const canvas = document.getElementById("scratch-canvas");
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    
-    canvas.width = canvas.offsetWidth || 300;
-    canvas.height = canvas.offsetHeight || 180;
+// កូដសម្រាប់គ្រប់គ្រងការកោសឆ្នោត និងកោសស្វ័យប្រវត្តិពេលជិតអស់
+let isDrawing = false;
+let canvas = document.getElementById('scratch-canvas');
+let ctx = canvas.getContext('2d');
 
-    ctx.fillStyle = "#94a3b8";
+function initScratchCard() {
+    canvas.width = 300;
+    canvas.height = 380;
+    ctx.fillStyle = '#94a3b8'; // ពណ៌ស្រទាប់ក្រាលសម្រាប់កោស
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#475569";
-    ctx.font = "16px Kantumruy Pro";
-    ctx.fillText("កោសទីនេះ", canvas.width / 2 - 35, canvas.height / 2);
-
-    let isDrawing = false;
     
-    function scratch(e) {
-        if (!isDrawing) return;
-        const rect = canvas.getBoundingClientRect();
-        const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-        const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+    // បង្កើតអត្ថបទនៅលើស្រទាប់កោស (បើមាន)
+    ctx.font = 'bold 20px Kantumruy Pro, sans-serif';
+    ctx.fillStyle = '#0f172a';
+    ctx.textAlign = 'center';
+    ctx.fillText('កោសទីនេះដើម្បីផ្សងសំណាង', canvas.width / 2, canvas.height / 2);
 
-        ctx.globalCompositeOperation = 'destination-out';
-        ctx.beginPath();
-        ctx.arc(x, y, 20, 0, Math.PI * 2);
-        ctx.fill();
-    }
-
-    canvas.addEventListener("mousedown", () => isDrawing = true);
-    canvas.addEventListener("mouseup", () => isDrawing = false);
-    canvas.addEventListener("mousemove", scratch);
-
-    canvas.addEventListener("touchstart", () => isDrawing = true);
-    canvas.addEventListener("touchend", () => isDrawing = false);
-    canvas.addEventListener("touchmove", scratch);
+    ctx.globalCompositeOperation = 'destination-out';
 }
 
-function setupModals() {
-    const modals = {
-        wallet: { btn: "wallet-btn", modal: "wallet-modal" },
-        history: { btn: "history-btn", modal: "history-modal" },
-        admin: { btn: "admin-btn", modal: "admin-modal" }
-    };
+if (canvas) {
+    initScratchCard();
 
-    Object.values(modals).forEach(item => {
-        const btn = document.getElementById(item.btn);
-        const modal = document.getElementById(item.modal);
-        if (btn && modal) {
-            btn.addEventListener("click", () => modal.classList.remove("hidden"));
+    // ព្រឹត្តិការណ៍ពេលចាប់ផ្តើមអូស (Mouse / Touch)
+    canvas.addEventListener('mousedown', () => isDrawing = true);
+    canvas.addEventListener('mousemove', scratchDraw);
+    window.addEventListener('mouseup', () => { isDrawing = false; checkRevealProgress(); });
+
+    canvas.addEventListener('touchstart', () => isDrawing = true);
+    canvas.addEventListener('touchmove', scratchDraw);
+    window.addEventListener('touchend', () => { isDrawing = false; checkRevealProgress(); });
+}
+
+function scratchDraw(e) {
+    if (!isDrawing) return;
+    e.preventDefault();
+    
+    let rect = canvas.getBoundingClientRect();
+    let x = (e.clientX || e.touches[0].clientX) - rect.left;
+    let y = (e.clientY || e.touches[0].clientY) - rect.top;
+
+    ctx.beginPath();
+    ctx.arc(x, y, 25, 0, Math.PI * 2, false);
+    ctx.fill();
+}
+
+// មុខងារគណនាភាគរយដែលបានកោស និងបើកស្វ័យប្រវត្តិបើកោសបានច្រើន
+function checkRevealProgress() {
+    if (isRevealed) return;
+
+    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let pixels = imageData.data;
+    let transparentPixels = 0;
+
+    // ពិនិត្យមើលាតើអុចpixel ណាមួយត្រូវបានលុប (alpha === 0)
+    for (let i = 3; i < pixels.length; i += 4) {
+        if (pixels[i] === 0) {
+            transparentPixels++;
         }
-    });
+    }
 
-    document.querySelectorAll(".close-modal").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-            e.target.closest(".modal-backdrop").classList.add("hidden");
-        });
-    });
+    let percentage = (transparentPixels / (pixels.length / 4)) * 100;
+
+    // បើកោសបានលើសពី 45% វានឹងលុបស្រទាប់កោសចេញទាំងអស់ដោយស្វ័យប្រវត្តិ (Auto-reveal)
+    if (percentage > 45) {
+        revealFullCard();
+    }
+}
+
+function revealFullCard() {
+    if (isRevealed) return;
+    isRevealed = true;
+    
+    // លុប canvas ចោលភ្លាមៗដោយរលូន
+    canvas.style.opacity = '0';
+    setTimeout(() => {
+        canvas.style.display = 'none';
+    }, 200);
+
+    // ផ្ដល់លទ្ធផលឈ្នះ ឬចាញ់
+    if (currentWinAmount > 0) {
+        document.getElementById('prize-text').innerHTML = `🎉 រាក់ទាក់!<br/>ឈ្នះទឹកប្រាក់<br/><span style="color:#ffb703;">${currentWinAmount.toLocaleString()} ៛</span>`;
+    } else {
+        document.getElementById('prize-text').innerHTML = `❌ សូមអភ័យទោស<br/>មិនត្រូវសំណាងទេ`;
+    }
 }
