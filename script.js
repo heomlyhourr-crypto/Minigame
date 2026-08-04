@@ -1,31 +1,5 @@
 // ==========================================
-// 1. CONFIGURATION & FIREBASE INITIALIZATION
-// ==========================================
-let BOT_TOKEN = "8840822540:AAHA_Tu065Ham9PIrp7BJS13wntlujoglqI";
-let ADMIN_CHAT_ID = "6995747279";
-
-firebase.database().ref('botToken').once('value', (snapshot) => {
-    if (snapshot.exists()) {
-        const configData = snapshot.val();
-        if (configData.botToken) BOT_TOKEN = configData.botToken;
-        if (configData.adminChatId) ADMIN_CHAT_ID = configData.adminChatId.toString();
-    }
-});
-
-// ==========================================
-// 2. TELEGRAM MESSAGE SENDER
-// ==========================================
-function sendTelegramMessage(chatId, text) {
-  if (!BOT_TOKEN) return;
-  fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: chatId, text: text, parse_mode: 'HTML' })
-  }).catch(err => console.error("Error sending TG message:", err));
-}
-
-// ==========================================
-// 3. MODAL CONTROLS & FIREBASE CONFIG
+// 1. FIREBASE INITIALIZATION (ត្រូវនៅខាងលើគេបង្អស់)
 // ==========================================
 const firebaseConfig = {
     apiKey: "AIzaSyCcGDjnR4gjlvW5eKMJClFSmvZePi7lQh0",
@@ -42,6 +16,33 @@ if (!firebase.apps.length) {
 }
 const database = firebase.database();
 
+let BOT_TOKEN = "8840822540:AAHA_Tu065Ham9PIrp7BJS13wntlujoglqI";
+let ADMIN_CHAT_ID = "6995747279";
+
+// ទាញយកទិន្នន័យបម្រុងទុកពី Firebase (បើមាន)
+database.ref('botToken').once('value').then((snapshot) => {
+    if (snapshot.exists()) {
+        const configData = snapshot.val();
+        if (configData.botToken) BOT_TOKEN = configData.botToken;
+        if (configData.adminChatId) ADMIN_CHAT_ID = configData.adminChatId.toString();
+    }
+}).catch(() => {});
+
+// ==========================================
+// 2. TELEGRAM MESSAGE SENDER
+// ==========================================
+function sendTelegramMessage(chatId, text) {
+  if (!BOT_TOKEN) return;
+  fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: chatId, text: text, parse_mode: 'HTML' })
+  }).catch(err => console.error("Error sending TG message:", err));
+}
+
+// ==========================================
+// 3. GLOBAL VARIABLES & TELEGRAM WEBAPP INIT
+// ==========================================
 const tg = window.Telegram?.WebApp;
 if (tg) {
     tg.ready();
@@ -124,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
         revealFullCard();
     });
 
-    // Setup មុខងារ Modal និង Admin
+    // Setup មុខងារផ្សេងៗ
     setupModals();
     setupAdminLogic();
     setupWalletLogic();
@@ -281,10 +282,10 @@ function generateGameData() {
     currentWinAmount = 0;
     let isWin = Math.random() * 100 < winRate;
 
-    for (let i = 0.0; i < 6; i++) {
+    for (let i = 0; i < 6; i++) {
         let randNum = Math.floor(Math.random() * 90) + 10;
         if (isWin && i === 0) {
-            randNum = targetNum; // ឱ្យត្រូវលេខសំណាង
+            randNum = targetNum;
             currentWinAmount = ticketPrice * 2;
         }
 
@@ -321,7 +322,6 @@ function initScratchCard() {
 
     ctx.globalCompositeOperation = 'destination-out';
 
-    // Event Listeners for Scratch
     canvas.onmousedown = () => isDrawing = true;
     canvas.onmousemove = scratchDraw;
     window.onmouseup = () => { isDrawing = false; checkRevealProgress(); };
