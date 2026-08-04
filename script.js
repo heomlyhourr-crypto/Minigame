@@ -1,19 +1,14 @@
 // ==========================================
 // 1. CONFIGURATION & FIREBASE INITIALIZATION
 // ==========================================
-let BOT_TOKEN = "8840822540:AAHA_Tu065Ham9PIrp7BJS13wntlujoglqI"; // Token ដែលអ្នកទើបផ្ដល់ជូន
-let ADMIN_CHAT_ID = "6995747279"; // ID របស់អ្នក
+let BOT_TOKEN = "8840822540:AAHA_Tu065Ham9PIrp7BJS13wntlujoglqI";
+let ADMIN_CHAT_ID = "6995747279";
 
-// ទាញយកទិន្នន័យបម្រុងទុកពី Firebase Node 'botToken' (បើមានការផ្លាស់ប្តូរថ្ងៃក្រោយ)
 firebase.database().ref('botToken').once('value', (snapshot) => {
     if (snapshot.exists()) {
         const configData = snapshot.val();
-        if (configData.botToken) {
-            BOT_TOKEN = configData.botToken;
-        }
-        if (configData.adminChatId) {
-            ADMIN_CHAT_ID = configData.adminChatId.toString();
-        }
+        if (configData.botToken) BOT_TOKEN = configData.botToken;
+        if (configData.adminChatId) ADMIN_CHAT_ID = configData.adminChatId.toString();
     }
 });
 
@@ -30,29 +25,8 @@ function sendTelegramMessage(chatId, text) {
 }
 
 // ==========================================
-// 3. MODAL CONTROLS (បន្តកូដរបស់អ្នកនៅទីនេះ)
+// 3. MODAL CONTROLS & FIREBASE CONFIG
 // ==========================================
-const modals = {
-    wallet: { btn: "wallet-btn", modal: "wallet-modal" },
-    history: { btn: "history-btn", modal: "history-modal" },
-    admin: { btn: "admin-btn", modal: "admin-modal" }
-};
-
-Object.values(modals).forEach(item => {
-    const btn = document.getElementById(item.btn);
-    const modal = document.getElementById(item.modal);
-    if (btn && modal) {
-        btn.addEventListener("click", () => modal.classList.remove("hidden"));
-    }
-});
-
-document.querySelectorAll(".close-modal").forEach(btn => {
-    btn.addEventListener("click", (e) => {
-        e.target.closest(".modal-backdrop").classList.add("hidden");
-    });
-});
-
-// 1. Firebase Config
 const firebaseConfig = {
     apiKey: "AIzaSyCcGDjnR4gjlvW5eKMJClFSmvZePi7lQh0",
     authDomain: "mini-shopping-9582e.firebaseapp.com",
@@ -68,7 +42,6 @@ if (!firebase.apps.length) {
 }
 const database = firebase.database();
 
-// 2. Telegram WebApp Init
 const tg = window.Telegram?.WebApp;
 if (tg) {
     tg.ready();
@@ -79,19 +52,23 @@ let currentBalance = 0;
 let ticketPrice = 1000;
 let winRate = 30;
 let targetNum = 0;
+let isRevealed = false;
+let currentWinAmount = 0;
+let userIdNum = 6995747279;
+let userName = "អ្នកប្រើប្រាស់";
 
-// កំណត់ Telegram ID របស់ Admin (ដាក់ ID របស់អ្នកនៅទីនេះ)
 const ADMIN_IDS = [6995747279]; 
 
 document.addEventListener("DOMContentLoaded", () => {
     let tgUser = tg?.initDataUnsafe?.user;
-    let userIdNum = tgUser?.id || 6995747279;
-    let userName = tgUser ? (tgUser.username ? `@${tgUser.username}` : `${tgUser.first_name} ${tgUser.last_name || ''}`.trim()) : "អ្នកប្រើប្រាស់";
+    userIdNum = tgUser?.id || 6995747279;
+    userName = tgUser ? (tgUser.username ? `@${tgUser.username}` : `${tgUser.first_name} ${tgUser.last_name || ''}`.trim()) : "អ្នកប្រើប្រាស់";
 
-    document.getElementById("user-name").textContent = userName;
-    document.getElementById("user-code").textContent = `ID-${userIdNum}`;
+    const userNameEl = document.getElementById("user-name");
+    const userCodeEl = document.getElementById("user-code");
+    if (userNameEl) userNameEl.textContent = userName;
+    if (userCodeEl) userCodeEl.textContent = `ID-${userIdNum}`;
 
-    // ពិនិត្យមើលថាជា Admin ឬអត់ (បើជា Admin នឹងបង្ហាញប៊ូតុង Admin Panel)
     if (ADMIN_IDS.includes(userIdNum)) {
         const adminBtn = document.getElementById("admin-btn");
         if (adminBtn) adminBtn.style.display = "inline-block";
@@ -104,14 +81,15 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data) {
             currentBalance = data.balance || 0;
         } else {
-            currentBalance = 10000; // ផ្តល់ប្រាក់ដើម 10,000៛
+            currentBalance = 10000;
             userRef.set({
                 name: userName,
                 balance: 10000,
                 created_at: new Date().toISOString()
             });
         }
-        document.getElementById("user-balance").textContent = currentBalance.toLocaleString();
+        const userBalEl = document.getElementById("user-balance");
+        if (userBalEl) userBalEl.textContent = currentBalance.toLocaleString();
     });
 
     // ប៊ូតុងជ្រើសរើសថ្លៃសន្លឹកឆ្នោត
@@ -136,27 +114,83 @@ document.addEventListener("DOMContentLoaded", () => {
         currentBalance -= ticketPrice;
         userRef.update({ balance: currentBalance });
 
+        isRevealed = false;
         generateGameData();
-        initCanvas();
+        initScratchCard();
     });
 
     // ប៊ូតុង កោសទាំងអស់
     document.getElementById("auto-scratch-btn").addEventListener("click", () => {
-        const canvas = document.getElementById("scratch-canvas");
-        if (canvas) {
-            const ctx = canvas.getContext("2d");
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
+        revealFullCard();
     });
 
     // Setup មុខងារ Modal និង Admin
     setupModals();
     setupAdminLogic();
+    setupWalletLogic();
+    initScratchCard();
 });
 
-// ៣. មុខងារ Admin Panel Logic ពេញលេញ
+// ==========================================
+// 4. MODAL & WALLET LOGIC
+// ==========================================
+function setupModals() {
+    const modals = {
+        wallet: { btn: "wallet-btn", modal: "wallet-modal" },
+        history: { btn: "history-btn", modal: "history-modal" },
+        admin: { btn: "admin-btn", modal: "admin-modal" }
+    };
+
+    Object.values(modals).forEach(item => {
+        const btn = document.getElementById(item.btn);
+        const modal = document.getElementById(item.modal);
+        if (btn && modal) {
+            btn.addEventListener("click", () => modal.classList.remove("hidden"));
+        }
+    });
+
+    document.querySelectorAll(".close-modal, #close-btn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            const modal = e.target.closest(".modal-backdrop");
+            if (modal) modal.classList.add("hidden");
+            if (e.target.id === "close-btn" && tg) tg.close();
+        });
+    });
+}
+
+function setupWalletLogic() {
+    const submitDepositBtn = document.getElementById("submit-deposit-btn");
+    if (submitDepositBtn) {
+        submitDepositBtn.addEventListener("click", () => {
+            const amtInput = document.getElementById("deposit-amount");
+            const amt = parseInt(amtInput.value);
+            if (isNaN(amt) || amt <= 0) {
+                alert("សូមបញ្ចូលចំនួនប្រាក់ឱ្យបានត្រឹមត្រូវ!");
+                return;
+            }
+
+            database.ref('deposits').push({
+                userId: userIdNum,
+                userName: userName,
+                amount: amt,
+                status: 'pending',
+                timestamp: Date.now()
+            });
+
+            const msg = `📥 <b>សំណើបញ្ចូលប្រាក់</b>\nUser ID: ID-${userIdNum}\nឈ្មោះ: ${userName}\nចំនួន: <b>${amt.toLocaleString()} ៛</b>`;
+            sendTelegramMessage(ADMIN_CHAT_ID, msg);
+
+            alert("✅ សំណើបញ្ចូលប្រាក់ត្រូវបានផ្ញើជូន Admin!");
+            amtInput.value = "";
+            document.getElementById("wallet-modal").classList.add("hidden");
+        });
+    }
+}
+
+// ==========================================
+// 5. ADMIN PANEL LOGIC
+// ==========================================
 function setupAdminLogic() {
-    // កត់ត្រា និងទាញយក Win Rate ពី Firebase
     const winRateRef = database.ref("settings/winRate");
     winRateRef.on("value", (snap) => {
         if (snap.val() !== null) {
@@ -166,7 +200,6 @@ function setupAdminLogic() {
         }
     });
 
-    // រក្សាទុក Win Rate ថ្មី
     const saveWinBtn = document.getElementById("save-winrate-btn");
     if (saveWinBtn) {
         saveWinBtn.addEventListener("click", () => {
@@ -177,7 +210,6 @@ function setupAdminLogic() {
         });
     }
 
-    // ទាញយក List អ្នកលេងទាំងអស់បង្ហាញក្នុង តារាង Admin
     const userTable = document.getElementById("admin-user-table");
     database.ref("users").on("value", (snapshot) => {
         if (!userTable) return;
@@ -198,17 +230,13 @@ function setupAdminLogic() {
         }
     });
 
-    // បញ្ចូលប្រាក់តាម Target ID Manual
     document.getElementById("admin-add-btn")?.addEventListener("click", () => modifyUserBalance(true));
     document.getElementById("admin-deduct-btn")?.addEventListener("click", () => modifyUserBalance(false));
 }
 
-// មុខងារបន្ថែម/ដកប្រាក់ Admin 
 function modifyUserBalance(isAdd) {
     let targetInput = document.getElementById("admin-target-id").value.trim();
     let amount = parseInt(document.getElementById("admin-target-amount").value);
-
-    // លុបអក្សរ "ID-" ចេញ ប្រសិនបើ Admin វាយបញ្ចូល
     let rawId = targetInput.replace("ID-", "");
 
     if (!rawId || isNaN(amount)) {
@@ -223,12 +251,11 @@ function modifyUserBalance(isAdd) {
         if (newBal < 0) newBal = 0;
         
         ref.set(newBal).then(() => {
-            alert(`ធ្វើបច្ចុប្បន្នភាពប្រាក់ ID-${rawId} ជោគជ័យ! សមតុល្យថ្មី៖ ${newBal.toLocaleString()}៛`);
+            alert(`ធ្វើបច្ចុប្បន្នភាពប្រាក់ ID-${rawId} ជោគជ័យ!`);
         });
     });
 }
 
-// មុខងារ Quick Add ក្នុងតារាង Admin
 window.quickAddMoney = function(targetId, amount) {
     const ref = database.ref("users/" + targetId + "/balance");
     ref.get().then((snap) => {
@@ -239,88 +266,100 @@ window.quickAddMoney = function(targetId, amount) {
     });
 };
 
-// បង្កើតលេខរង្វាន់
+// ==========================================
+// 6. SCRATCH CARD GAME LOGIC
+// ==========================================
 function generateGameData() {
     targetNum = Math.floor(Math.random() * 90) + 10;
-    document.getElementById("target-number").textContent = targetNum;
+    const targetEl = document.getElementById("target-number");
+    if (targetEl) targetEl.textContent = targetNum;
 
     const grid = document.getElementById("prize-grid");
+    if (!grid) return;
     grid.innerHTML = "";
     
-    for (let i = 0; i < 6; i++) {
+    currentWinAmount = 0;
+    let isWin = Math.random() * 100 < winRate;
+
+    for (let i = 0.0; i < 6; i++) {
         let randNum = Math.floor(Math.random() * 90) + 10;
+        if (isWin && i === 0) {
+            randNum = targetNum; // ឱ្យត្រូវលេខសំណាង
+            currentWinAmount = ticketPrice * 2;
+        }
+
         let item = document.createElement("div");
         item.style.cssText = "background:#1e293b; color:#fff; padding:10px; text-align:center; border-radius:6px; font-weight:bold;";
         item.innerHTML = `<div>${randNum}</div><div style="color:#f59e0b; font-size:11px;">${(ticketPrice * 2).toLocaleString()}៛</div>`;
         grid.appendChild(item);
     }
+
+    const footerMsg = document.getElementById("ticket-footer-msg");
+    if (footerMsg) footerMsg.innerHTML = `<span id="prize-text">សូមកោសដើម្បីមើលលទ្ធផល!</span>`;
 }
 
-// កូដសម្រាប់គ្រប់គ្រងការកោសឆ្នោត និងកោសស្វ័យប្រវត្តិពេលជិតអស់
 let isDrawing = false;
-let canvas = document.getElementById('scratch-canvas');
-let ctx = canvas.getContext('2d');
+let canvas, ctx;
 
 function initScratchCard() {
-    canvas.width = 300;
-    canvas.height = 380;
-    ctx.fillStyle = '#94a3b8'; // ពណ៌ស្រទាប់ក្រាលសម្រាប់កោស
+    canvas = document.getElementById('scratch-canvas');
+    if (!canvas) return;
+    ctx = canvas.getContext('2d');
+
+    canvas.style.display = 'block';
+    canvas.style.opacity = '1';
+    canvas.width = canvas.offsetWidth || 300;
+    canvas.height = 200;
+
+    ctx.fillStyle = '#94a3b8';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    // បង្កើតអត្ថបទនៅលើស្រទាប់កោស (បើមាន)
     ctx.font = 'bold 20px Kantumruy Pro, sans-serif';
     ctx.fillStyle = '#0f172a';
     ctx.textAlign = 'center';
     ctx.fillText('កោសទីនេះដើម្បីផ្សងសំណាង', canvas.width / 2, canvas.height / 2);
 
     ctx.globalCompositeOperation = 'destination-out';
-}
 
-if (canvas) {
-    initScratchCard();
+    // Event Listeners for Scratch
+    canvas.onmousedown = () => isDrawing = true;
+    canvas.onmousemove = scratchDraw;
+    window.onmouseup = () => { isDrawing = false; checkRevealProgress(); };
 
-    // ព្រឹត្តិការណ៍ពេលចាប់ផ្តើមអូស (Mouse / Touch)
-    canvas.addEventListener('mousedown', () => isDrawing = true);
-    canvas.addEventListener('mousemove', scratchDraw);
-    window.addEventListener('mouseup', () => { isDrawing = false; checkRevealProgress(); });
-
-    canvas.addEventListener('touchstart', () => isDrawing = true);
-    canvas.addEventListener('touchmove', scratchDraw);
-    window.addEventListener('touchend', () => { isDrawing = false; checkRevealProgress(); });
+    canvas.ontouchstart = () => isDrawing = true;
+    canvas.ontouchmove = scratchDraw;
+    window.ontouchend = () => { isDrawing = false; checkRevealProgress(); };
 }
 
 function scratchDraw(e) {
-    if (!isDrawing) return;
+    if (!isDrawing || !canvas) return;
     e.preventDefault();
     
     let rect = canvas.getBoundingClientRect();
-    let x = (e.clientX || e.touches[0].clientX) - rect.left;
-    let y = (e.clientY || e.touches[0].clientY) - rect.top;
+    let clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
+    let clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
+    let x = clientX - rect.left;
+    let y = clientY - rect.top;
 
     ctx.beginPath();
     ctx.arc(x, y, 25, 0, Math.PI * 2, false);
     ctx.fill();
 }
 
-// មុខងារគណនាភាគរយដែលបានកោស និងបើកស្វ័យប្រវត្តិបើកោសបានច្រើន
 function checkRevealProgress() {
-    if (isRevealed) return;
+    if (isRevealed || !canvas || !ctx) return;
 
     let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     let pixels = imageData.data;
     let transparentPixels = 0;
 
-    // ពិនិត្យមើលាតើអុចpixel ណាមួយត្រូវបានលុប (alpha === 0)
     for (let i = 3; i < pixels.length; i += 4) {
-        if (pixels[i] === 0) {
-            transparentPixels++;
-        }
+        if (pixels[i] === 0) transparentPixels++;
     }
 
     let percentage = (transparentPixels / (pixels.length / 4)) * 100;
 
-    // បើកោសបានលើសពី 45% វានឹងលុបស្រទាប់កោសចេញទាំងអស់ដោយស្វ័យប្រវត្តិ (Auto-reveal)
-    if (percentage > 45) {
+    if (percentage > 40) {
         revealFullCard();
     }
 }
@@ -329,16 +368,19 @@ function revealFullCard() {
     if (isRevealed) return;
     isRevealed = true;
     
-    // លុប canvas ចោលភ្លាមៗដោយរលូន
-    canvas.style.opacity = '0';
-    setTimeout(() => {
-        canvas.style.display = 'none';
-    }, 200);
+    if (canvas) {
+        canvas.style.opacity = '0';
+        setTimeout(() => { canvas.style.display = 'none'; }, 200);
+    }
 
-    // ផ្ដល់លទ្ធផលឈ្នះ ឬចាញ់
-    if (currentWinAmount > 0) {
-        document.getElementById('prize-text').innerHTML = `🎉 រាក់ទាក់!<br/>ឈ្នះទឹកប្រាក់<br/><span style="color:#ffb703;">${currentWinAmount.toLocaleString()} ៛</span>`;
-    } else {
-        document.getElementById('prize-text').innerHTML = `❌ សូមអភ័យទោស<br/>មិនត្រូវសំណាងទេ`;
+    const prizeText = document.getElementById('prize-text');
+    if (prizeText) {
+        if (currentWinAmount > 0) {
+            prizeText.innerHTML = `🎉 សូមអបអរសាទរ!<br/>ឈ្នះទឹកប្រាក់: <span style="color:#ffb703;">${currentWinAmount.toLocaleString()} ៛</span>`;
+            currentBalance += currentWinAmount;
+            database.ref("users/" + userIdNum).update({ balance: currentBalance });
+        } else {
+            prizeText.innerHTML = `❌ សូមអភ័យទោស មិនត្រូវសំណាងទេ!`;
+        }
     }
 }
