@@ -1,12 +1,12 @@
-// ១. Firebase Configuration
+// ១. Firebase Configuration (បានបន្ថែមសញ្ញាក្បៀស , ដែលខ្វះ)
 const firebaseConfig = {
-    apiKey: "AIzaSyCcGDjnR4gjlvW5eKMJClFSmvZePi7lQh0" // Key របស់អ្នកក្នុងរូប
+    apiKey: "AIzaSyCcGDjnR4gjlvW5eKMJClFSmvZePi7lQh0",
     authDomain: "mini-shopping-9582e.firebaseapp.com",
     databaseURL: "https://mini-shopping-9582e-default-rtdb.firebaseio.com",
     projectId: "mini-shopping-9582e",
     storageBucket: "mini-shopping-9582e.appspot.com",
     messagingSenderId: "1785688834718",
-    appId: "1:1785688834718:web:b03e7380..."
+    appId: "1:1785688834718:web:b03e7380"
 };
 
 // ពិនិត្យការពារកុំឱ្យ Initialize firebase ពីរដង
@@ -22,24 +22,29 @@ if (tg) {
     tg.expand();
 }
 
-// ព័ត៌មាន User ពី Telegram
-let user = tg?.initDataUnsafe?.user || {
-    id: 6995747279,
-    first_name: "អ្នកប្រើប្រាស់",
-    last_name: ""
-};
-
-const userId = `ID-${user.id}`;
-const userName = `${user.first_name} ${user.last_name || ''}`.trim();
-
-// Variables សម្រាប់ Game
+// Variables សម្រាប់ Game Global
 let currentBalance = 0;
 let ticketPrice = 1000;
 let winRate = 30; // default 30%
 let isScratched = false;
 
-// ៣. DOM Elements
+// ៣. ដំណើរការពេល DOM Load រួចរាល់
 document.addEventListener("DOMContentLoaded", () => {
+    
+    // ទាញយកព័ត៌មាន User ពី Telegram SDK ដោយផ្ទាល់ក្នុង Event នេះ
+    let tgUser = tg?.initDataUnsafe?.user;
+    
+    let user = {
+        id: tgUser?.id || 6995747279,
+        first_name: tgUser?.first_name || "អ្នកប្រើប្រាស់",
+        last_name: tgUser?.last_name || "",
+        username: tgUser?.username ? `@${tgUser.username}` : ""
+    };
+
+    const userId = `ID-${user.id}`;
+    // បង្ហាញ Username បើមាន បើគ្មានបង្ហាញ First + Last Name
+    const userName = user.username || `${user.first_name} ${user.last_name}`.trim();
+
     // បង្ហាញព័ត៌មាន User លើ UI
     const nameEl = document.getElementById("user-name");
     const codeEl = document.getElementById("user-code");
