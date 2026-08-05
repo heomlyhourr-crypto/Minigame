@@ -1,5 +1,5 @@
 // ==========================================
-// 1. FIREBASE INITIALIZATION (ត្រូវនៅខាងលើគេបង្អស់)
+// 1. FIREBASE INITIALIZATION
 // ==========================================
 const firebaseConfig = {
     apiKey: "AIzaSyCcGDjnR4gjlvW5eKMJClFSmvZePi7lQh0",
@@ -19,7 +19,6 @@ const database = firebase.database();
 let BOT_TOKEN = "8840822540:AAHA_Tu065Ham9PIrp7BJS13wntlujoglqI";
 let ADMIN_CHAT_ID = "6995747279";
 
-// ទាញយកទិន្នន័យបម្រុងទុកពី Firebase (បើមាន)
 database.ref('botToken').once('value').then((snapshot) => {
     if (snapshot.exists()) {
         const configData = snapshot.val();
@@ -53,10 +52,11 @@ let currentBalance = 0;
 let ticketPrice = 1000;
 let winRate = 30;
 let targetNum = 0;
-let isRevealed = false;
+let isRevealed = true; // កំណត់ថាបានកោសរួចស្រេចនៅពេលចាប់ផ្តើម
 let currentWinAmount = 0;
 let userIdNum = 6995747279;
 let userName = "អ្នកប្រើប្រាស់";
+let savedTickets = []; // ឃ្លាំងស្តុកទុកសន្លឹកឆ្នោតដែលបានទិញទុក
 
 const ADMIN_IDS = [6995747279]; 
 
@@ -75,7 +75,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (adminBtn) adminBtn.style.display = "inline-block";
     }
 
-    // Firebase User Realtime Listener
     const userRef = database.ref("users/" + userIdNum);
     userRef.on("value", (snapshot) => {
         const data = snapshot.val();
@@ -93,7 +92,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (userBalEl) userBalEl.textContent = currentBalance.toLocaleString();
     });
 
-    // ប៊ូតុងជ្រើសរើសថ្លៃសន្លឹកឆ្នោត
     const priceBtns = document.querySelectorAll(".price-btn[data-price]");
     priceBtns.forEach(btn => {
         btn.addEventListener("click", (e) => {
@@ -105,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Event ពេលចុច "ទិញសន្លឹកឆ្នោត"
+    // មុខងារទិញសន្លឹកឆ្នោត ឬទិញទុកក្នុងស្តុកប្រសិនបើកំពុងលេងមិនទាន់កោស
     document.getElementById("buy-ticket-btn").addEventListener("click", () => {
         if (currentBalance < ticketPrice) {
             alert("សមតុល្យប្រាក់មិនគ្រប់គ្រាន់ទេ!");
@@ -115,22 +113,67 @@ document.addEventListener("DOMContentLoaded", () => {
         currentBalance -= ticketPrice;
         userRef.update({ balance: currentBalance });
 
+        // បើមិនទាន់កោសសន្លឹកបច្ចុប្បន្ន គឺរក្សាទុកចូលក្នុងស្តុក (savedTickets)
+        if (!isRevealed) {
+            savedTickets.push(ticketPrice);
+            updateTicketBadge();
+            alert(`✅ បានទិញសន្លឹកតម្លៃ ${ticketPrice.toLocaleString()}៛ ទុកក្នុងស្តុករួចរាល់! (${savedTickets.length} សន្លឹកក្នុងស្តុក)`);
+            return;
+        }
+
+        // បើកោសរួចហើយ ចាប់ផ្តើមលេងសន្លឹកថ្មីភ្លាម
         isRevealed = false;
-        generateGameData();
+        generateGameData(ticketPrice);
         initScratchCard();
     });
 
-    // ប៊ូតុង កោសទាំងអស់
     document.getElementById("auto-scratch-btn").addEventListener("click", () => {
         revealFullCard();
     });
 
-    // Setup មុខងារផ្សេងៗ
     setupModals();
     setupAdminLogic();
     setupWalletLogic();
-    initScratchCard();
+    
+    // បង្កើតទម្រង់ទទេរដំបូង
+    resetEmptyCard();
 });
+
+// បង្ហាញចំនួនសន្លឹកក្នុងស្តុក (អាចបន្ថែម Tag បើចង់បង្ហាញ)
+function updateTicketBadge() {
+    const buyBtn = document.getElementById("buy-ticket-btn");
+    if (buyBtn) {
+        if (savedTickets.length > 0) {
+            buyBtn.innerHTML = `ទិញសន្លឹកឆ្នោត (${ticketPrice.toLocaleString()} ៛) <span style="background:red; color:#fff; padding:2px 6px; border-radius:10px; font-size:11px;">ស្តុក: ${savedTickets.length}</span>`;
+        } else {
+            buyBtn.innerHTML = `ទិញសន្លឹកឆ្នោត <span id="buy-price-tag">${ticketPrice.toLocaleString()} ៛</span>`;
+        }
+    }
+}
+
+function resetEmptyCard() {
+    const targetEl = document.getElementById("target-number");
+    if (targetEl) targetEl.textContent = "--";
+
+    const grid = document.getElementById("prize-grid");
+    if (grid) {
+        grid.innerHTML = "";
+        for (let i = 0; i < 6; i++) {
+            let item = document.createElement("div");
+            item.style.cssText = "background:#1e293b; color:#64748b; padding:10px; text-align:center; border-radius:6px; font-weight:bold;";
+            item.innerHTML = `<div>--</div><div style="font-size:11px;">-----</div>`;
+            grid.appendChild(item);
+        }
+    }
+
+    const footerMsg = document.getElementById("ticket-footer-msg");
+    if (footerMsg) footerMsg.innerHTML = `<span id="prize-text">សូមចុចទិញសន្លឹកឆ្នោតដើម្បីចាប់ផ្តើម!</span>`;
+    
+    const canvas = document.getElementById('scratch-canvas');
+    if (canvas) {
+        canvas.style.display = 'none';
+    }
+}
 
 // ==========================================
 // 4. MODAL & WALLET LOGIC
@@ -270,7 +313,7 @@ window.quickAddMoney = function(targetId, amount) {
 // ==========================================
 // 6. SCRATCH CARD GAME LOGIC
 // ==========================================
-function generateGameData() {
+function generateGameData(price) {
     targetNum = Math.floor(Math.random() * 90) + 10;
     const targetEl = document.getElementById("target-number");
     if (targetEl) targetEl.textContent = targetNum;
@@ -282,16 +325,26 @@ function generateGameData() {
     currentWinAmount = 0;
     let isWin = Math.random() * 100 < winRate;
 
+    // កំណត់រង្វាន់សមរម្យតាមតម្លៃសន្លឹក
+    let possiblePrizes = [price, price * 2, price * 5, price * 10];
+    if (price >= 10000) {
+        possiblePrizes = [10000, 20000, 50000, 100000];
+    } else if (price >= 5000) {
+        possiblePrizes = [5000, 10000, 20000, 50000];
+    }
+
     for (let i = 0; i < 6; i++) {
         let randNum = Math.floor(Math.random() * 90) + 10;
+        let randomPrize = possiblePrizes[Math.floor(Math.random() * possiblePrizes.length)];
+
         if (isWin && i === 0) {
             randNum = targetNum;
-            currentWinAmount = ticketPrice * 2;
+            currentWinAmount = randomPrize;
         }
 
         let item = document.createElement("div");
         item.style.cssText = "background:#1e293b; color:#fff; padding:10px; text-align:center; border-radius:6px; font-weight:bold;";
-        item.innerHTML = `<div>${randNum}</div><div style="color:#f59e0b; font-size:11px;">${(ticketPrice * 2).toLocaleString()}៛</div>`;
+        item.innerHTML = `<div>${randNum}</div><div style="color:#f59e0b; font-size:11px;">${randomPrize.toLocaleString()}៛</div>`;
         grid.appendChild(item);
     }
 
@@ -383,4 +436,15 @@ function revealFullCard() {
             prizeText.innerHTML = `❌ សូមអភ័យទោស មិនត្រូវសំណាងទេ!`;
         }
     }
+
+    // បន្ទាប់ពីកោសរួច បើមានសន្លឹកឆ្នោតទុកក្នុងស្តុក គឺទាញមកលេងបន្តស្វ័យប្រវត្តិ
+    setTimeout(() => {
+        if (savedTickets.length > 0) {
+            let nextPrice = savedTickets.shift(); // ដកសន្លឹកទីមួយចេញពីស្តុក
+            updateTicketBadge();
+            isRevealed = false;
+            generateGameData(nextPrice);
+            initScratchCard();
+        }
+    }, 1500);
 }
