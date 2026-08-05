@@ -266,7 +266,7 @@ function setupWalletLogic() {
                 timestamp: Date.now()
             });
 
-            // ហៅមុខងារផ្ញើសារព្រមទាំងប៊ូតុងទៅ Admin
+            // ហៅមុខងារផ្ញើសារ និងប៊ូតុងទៅ Admin សម្រាប់សំណើបញ្ចូលប្រាក់
             sendDepositApprovalToAdmin(ADMIN_CHAT_ID, amt, userIdNum, userName);
 
             alert("✅ សំណើបញ្ចូលប្រាក់ត្រូវបានផ្ញើជូន Admin!");
