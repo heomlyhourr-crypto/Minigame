@@ -28,14 +28,64 @@ database.ref('botToken').once('value').then((snapshot) => {
 }).catch(() => {});
 
 // ==========================================
-// 2. TELEGRAM MESSAGE SENDER
+// 2. TELEGRAM MESSAGE SENDER WITH INLINE BUTTONS
 // ==========================================
-function sendTelegramMessage(chatId, text) {
+function sendDepositApprovalToAdmin(chatId, amt, userId, userName) {
   if (!BOT_TOKEN) return;
+  
+  const msg = `📥 <b>សំណើបញ្ចូលប្រាក់</b>\n` +
+              `User ID: ID-${userId}\n` +
+              `ឈ្មោះ: ${userName}\n` +
+              `ចំនួន: <b>${amt.toLocaleString()} ៛</b>`;
+
+  const inlineKeyboard = {
+    inline_keyboard: [
+      [
+        { text: "❌ មិនយល់ព្រម", callback_data: `deposit_reject_${userId}_${amt}` },
+        { text: "✅ យល់ព្រម", callback_data: `deposit_accept_${userId}_${amt}` }
+      ]
+    ]
+  };
+
   fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: chatId, text: text, parse_mode: 'HTML' })
+    body: JSON.stringify({ 
+      chat_id: chatId, 
+      text: msg, 
+      parse_mode: 'HTML',
+      reply_markup: inlineKeyboard
+    })
+  }).catch(err => console.error("Error sending TG message:", err));
+}
+
+function sendWithdrawApprovalToAdmin(chatId, amt, userId, userName, remainingBal) {
+  if (!BOT_TOKEN) return;
+
+  const msg = `📤 <b>សំណើដកប្រាក់</b>\n` +
+              `User ID: ID-${userId}\n` +
+              `ឈ្មោះ: ${userName}\n` +
+              `ចំនួនទឹកប្រាក់: <b>${amt.toLocaleString()} ៛</b>\n` +
+              `សមតុល្យនៅសល់ពេលកាត់: <b>${remainingBal.toLocaleString()} ៛</b>`;
+
+  const inlineKeyboard = {
+    inline_keyboard: [
+      [
+        { text: "❌ មិនយល់ព្រម (សងប្រាក់វិញ)", callback_data: `withdraw_reject_${userId}_${amt}` },
+        { text: "✅ យល់ព្រម (បញ្ជាក់ការដក)", callback_data: `withdraw_accept_${userId}_${amt}` }
+      ]
+    ]
+  };
+
+  fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ 
+      chat_id: chatId, 
+      text: msg, 
+      parse_mode: 'HTML',
+      reply_markup: inlineKeyboard
+    })
   }).catch(err => console.error("Error sending TG message:", err));
 }
 
@@ -52,11 +102,11 @@ let currentBalance = 0;
 let ticketPrice = 1000;
 let winRate = 30;
 let targetNum = 0;
-let isRevealed = true; // កំណត់ថាបានកោសរួចស្រេចនៅពេលចាប់ផ្តើម
+let isRevealed = true; 
 let currentWinAmount = 0;
 let userIdNum = 6995747279;
 let userName = "អ្នកប្រើប្រាស់";
-let savedTickets = []; // ឃ្លាំងស្តុកទុកសន្លឹកឆ្នោតដែលបានទិញទុក
+let savedTickets = []; 
 
 const ADMIN_IDS = [6995747279]; 
 
@@ -103,7 +153,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // មុខងារទិញសន្លឹកឆ្នោត ឬទិញទុកក្នុងស្តុកប្រសិនបើកំពុងលេងមិនទាន់កោស
     document.getElementById("buy-ticket-btn").addEventListener("click", () => {
         if (currentBalance < ticketPrice) {
             alert("សមតុល្យប្រាក់មិនគ្រប់គ្រាន់ទេ!");
@@ -113,7 +162,6 @@ document.addEventListener("DOMContentLoaded", () => {
         currentBalance -= ticketPrice;
         userRef.update({ balance: currentBalance });
 
-        // បើមិនទាន់កោសសន្លឹកបច្ចុប្បន្ន គឺរក្សាទុកចូលក្នុងស្តុក (savedTickets)
         if (!isRevealed) {
             savedTickets.push(ticketPrice);
             updateTicketBadge();
@@ -121,7 +169,6 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // បើកោសរួចហើយ ចាប់ផ្តើមលេងសន្លឹកថ្មីភ្លាម
         isRevealed = false;
         generateGameData(ticketPrice);
         initScratchCard();
@@ -134,12 +181,9 @@ document.addEventListener("DOMContentLoaded", () => {
     setupModals();
     setupAdminLogic();
     setupWalletLogic();
-    
-    // បង្កើតទម្រង់ទទេរដំបូង
     resetEmptyCard();
 });
 
-// បង្ហាញចំនួនសន្លឹកក្នុងស្តុក (អាចបន្ថែម Tag បើចង់បង្ហាញ)
 function updateTicketBadge() {
     const buyBtn = document.getElementById("buy-ticket-btn");
     if (buyBtn) {
@@ -202,9 +246,6 @@ function setupModals() {
     });
 }
 
-// ==========================================
-// 4. MODAL & WALLET LOGIC (Deposit & Withdraw)
-// ==========================================
 function setupWalletLogic() {
     // 1. មុខងារសំណើបញ្ចូលប្រាក់
     const submitDepositBtn = document.getElementById("submit-deposit-btn");
@@ -225,8 +266,8 @@ function setupWalletLogic() {
                 timestamp: Date.now()
             });
 
-            const msg = `📥 <b>សំណើបញ្ចូលប្រាក់</b>\nUser ID: ID-${userIdNum}\nឈ្មោះ: ${userName}\nចំនួន: <b>${amt.toLocaleString()} ៛</b>`;
-            sendTelegramMessage(ADMIN_CHAT_ID, msg);
+            // ហៅមុខងារផ្ញើសារព្រមទាំងប៊ូតុងទៅ Admin
+            sendDepositApprovalToAdmin(ADMIN_CHAT_ID, amt, userIdNum, userName);
 
             alert("✅ សំណើបញ្ចូលប្រាក់ត្រូវបានផ្ញើជូន Admin!");
             amtInput.value = "";
@@ -234,7 +275,7 @@ function setupWalletLogic() {
         });
     }
 
-    // 2. មុខងារសំណើដកប្រាក់ (កែសម្រួលកាត់ទឹកប្រាក់ចេញពី Balance ស្របពេលដាក់សំណើ)
+    // 2. មុខងារសំណើដកប្រាក់
     const submitWithdrawBtn = document.getElementById("submit-withdraw-btn");
     if (submitWithdrawBtn) {
         submitWithdrawBtn.addEventListener("click", () => {
@@ -251,12 +292,10 @@ function setupWalletLogic() {
                 return;
             }
 
-            // កាត់ទឹកប្រាក់ចេញពី Balance របស់អ្នកប្រើប្រាស់ក្នុង Firebase ភ្លាមៗ
             let newBalance = currentBalance - amt;
             const userRef = database.ref("users/" + userIdNum);
 
             userRef.update({ balance: newBalance }).then(() => {
-                // ផ្ញើសំណើទៅ Firebase ក្នុងតារាង withdrawals
                 database.ref('withdrawals').push({
                     userId: userIdNum,
                     userName: userName,
@@ -265,9 +304,8 @@ function setupWalletLogic() {
                     timestamp: Date.now()
                 });
 
-                // ផ្ញើសារជូនដំណឹងទៅកាន់ Telegram Admin
-                const msg = `📤 <b>សំណើដកប្រាក់</b>\nUser ID: ID-${userIdNum}\nឈ្មោះ: ${userName}\nចំនួនទឹកប្រាក់: <b>${amt.toLocaleString()} ៛</b>\nសមតុល្យនៅសល់: <b>${newBalance.toLocaleString()} ៛</b>`;
-                sendTelegramMessage(ADMIN_CHAT_ID, msg);
+                // ហៅមុខងារផ្ញើសារសំណើដកប្រាក់ព្រមទាំងប៊ូតុងទៅ Admin
+                sendWithdrawApprovalToAdmin(ADMIN_CHAT_ID, amt, userIdNum, userName, newBalance);
 
                 alert("✅ សំណើដកប្រាក់ត្រូវបានដាក់ស្នើ និងកាត់ទឹកប្រាក់ជោគជ័យ!");
                 if (withdrawInput) withdrawInput.value = "";
@@ -279,7 +317,6 @@ function setupWalletLogic() {
         });
     }
 }
-
 
 // ==========================================
 // 5. ADMIN PANEL LOGIC
@@ -375,7 +412,6 @@ function generateGameData(price) {
     currentWinAmount = 0;
     let isWin = Math.random() * 100 < winRate;
 
-    // កំណត់រង្វាន់សមរម្យតាមតម្លៃសន្លឹក
     let possiblePrizes = [price, price * 2, price * 5, price * 10];
     if (price >= 10000) {
         possiblePrizes = [10000, 20000, 50000, 100000];
@@ -487,10 +523,9 @@ function revealFullCard() {
         }
     }
 
-    // បន្ទាប់ពីកោសរួច បើមានសន្លឹកឆ្នោតទុកក្នុងស្តុក គឺទាញមកលេងបន្តស្វ័យប្រវត្តិ
     setTimeout(() => {
         if (savedTickets.length > 0) {
-            let nextPrice = savedTickets.shift(); // ដកសន្លឹកទីមួយចេញពីស្តុក
+            let nextPrice = savedTickets.shift(); 
             updateTicketBadge();
             isRevealed = false;
             generateGameData(nextPrice);
