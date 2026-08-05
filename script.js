@@ -202,7 +202,11 @@ function setupModals() {
     });
 }
 
+// ==========================================
+// 4. MODAL & WALLET LOGIC (Deposit & Withdraw)
+// ==========================================
 function setupWalletLogic() {
+    // 1. មុខងារសំណើបញ្ចូលប្រាក់
     const submitDepositBtn = document.getElementById("submit-deposit-btn");
     if (submitDepositBtn) {
         submitDepositBtn.addEventListener("click", () => {
@@ -229,7 +233,53 @@ function setupWalletLogic() {
             document.getElementById("wallet-modal").classList.add("hidden");
         });
     }
+
+    // 2. មុខងារសំណើដកប្រាក់ (កែសម្រួលកាត់ទឹកប្រាក់ចេញពី Balance ស្របពេលដាក់សំណើ)
+    const submitWithdrawBtn = document.getElementById("submit-withdraw-btn");
+    if (submitWithdrawBtn) {
+        submitWithdrawBtn.addEventListener("click", () => {
+            const withdrawInput = document.getElementById("withdraw-amount");
+            const amt = parseInt(withdrawInput ? withdrawInput.value : 0);
+            
+            if (isNaN(amt) || amt <= 0) {
+                alert("សូមបញ្ចូលចំនួនប្រាក់ដកឱ្យបានត្រឹមត្រូវ!");
+                return;
+            }
+
+            if (currentBalance < amt) {
+                alert("សមតុល្យប្រាក់របស់អ្នកមិនគ្រប់គ្រាន់សម្រាប់ដកទេ!");
+                return;
+            }
+
+            // កាត់ទឹកប្រាក់ចេញពី Balance របស់អ្នកប្រើប្រាស់ក្នុង Firebase ភ្លាមៗ
+            let newBalance = currentBalance - amt;
+            const userRef = database.ref("users/" + userIdNum);
+
+            userRef.update({ balance: newBalance }).then(() => {
+                // ផ្ញើសំណើទៅ Firebase ក្នុងតារាង withdrawals
+                database.ref('withdrawals').push({
+                    userId: userIdNum,
+                    userName: userName,
+                    amount: amt,
+                    status: 'pending',
+                    timestamp: Date.now()
+                });
+
+                // ផ្ញើសារជូនដំណឹងទៅកាន់ Telegram Admin
+                const msg = `📤 <b>សំណើដកប្រាក់</b>\nUser ID: ID-${userIdNum}\nឈ្មោះ: ${userName}\nចំនួនទឹកប្រាក់: <b>${amt.toLocaleString()} ៛</b>\nសមតុល្យនៅសល់: <b>${newBalance.toLocaleString()} ៛</b>`;
+                sendTelegramMessage(ADMIN_CHAT_ID, msg);
+
+                alert("✅ សំណើដកប្រាក់ត្រូវបានដាក់ស្នើ និងកាត់ទឹកប្រាក់ជោគជ័យ!");
+                if (withdrawInput) withdrawInput.value = "";
+                document.getElementById("wallet-modal").classList.add("hidden");
+            }).catch((error) => {
+                console.error("Error updating balance:", error);
+                alert("មានបញ្ហាក្នុងការកាត់ប្រាក់ សូមព្យាយាមម្ដងទៀត!");
+            });
+        });
+    }
 }
+
 
 // ==========================================
 // 5. ADMIN PANEL LOGIC
