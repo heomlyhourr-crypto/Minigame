@@ -28,15 +28,19 @@ database.ref('botToken').once('value').then((snapshot) => {
 }).catch(() => {});
 
 // ==========================================
-// 2. TELEGRAM MESSAGE SENDER WITH INLINE BUTTONS
+// 2. TELEGRAM MESSAGE SENDER
 // ==========================================
-function sendDepositApprovalToAdmin(chatId, amt, userId, userName) {
+function sendDepositApprovalToAdmin(chatId, amt, userId, userName, receiptUrl = "") {
   if (!BOT_TOKEN) return;
   
-  const msg = `📥 <b>សំណើបញ្ចូលប្រាក់</b>\n` +
-              `User ID: ID-${userId}\n` +
-              `ឈ្មោះ: ${userName}\n` +
-              `ចំនួន: <b>${amt.toLocaleString()} ៛</b>`;
+  let msg = `📥 <b>សំណើបញ្ចូលប្រាក់ (KHQR)</b>\n` +
+            `User ID: ID-${userId}\n` +
+            `ឈ្មោះ: ${userName}\n` +
+            `ចំនួន: <b>${amt.toLocaleString()} ៛</b>`;
+            
+  if (receiptUrl) {
+      msg += `\nវិកាយប័ត្រ: ${receiptUrl}`;
+  }
 
   const inlineKeyboard = {
     inline_keyboard: [
@@ -59,14 +63,15 @@ function sendDepositApprovalToAdmin(chatId, amt, userId, userName) {
   }).catch(err => console.error("Error sending TG message:", err));
 }
 
-function sendWithdrawApprovalToAdmin(chatId, amt, userId, userName, remainingBal) {
+function sendWithdrawApprovalToAdmin(chatId, amt, userId, userName, remainingBal, bankUrl) {
   if (!BOT_TOKEN) return;
 
   const msg = `📤 <b>សំណើដកប្រាក់</b>\n` +
               `User ID: ID-${userId}\n` +
               `ឈ្មោះ: ${userName}\n` +
               `ចំនួនទឹកប្រាក់: <b>${amt.toLocaleString()} ៛</b>\n` +
-              `សមតុល្យនៅសល់ពេលកាត់: <b>${remainingBal.toLocaleString()} ៛</b>`;
+              `URL ធនាគារ: ${bankUrl}\n` +
+              `សមតុល្យនៅសល់: <b>${remainingBal.toLocaleString()} ៛</b>`;
 
   const inlineKeyboard = {
     inline_keyboard: [
@@ -90,7 +95,7 @@ function sendWithdrawApprovalToAdmin(chatId, amt, userId, userName, remainingBal
 }
 
 // ==========================================
-// 3. GLOBAL VARIABLES & TELEGRAM WEBAPP INIT
+// 3. GLOBAL VARIABLES & WEBAPP INIT
 // ==========================================
 const tg = window.Telegram?.WebApp;
 if (tg) {
@@ -178,11 +183,77 @@ document.addEventListener("DOMContentLoaded", () => {
         revealFullCard();
     });
 
+    injectExtraWalletUI();
     setupModals();
     setupAdminLogic();
     setupWalletLogic();
     resetEmptyCard();
 });
+// ==========================================
+// 4. UI & LOBBY LOGIC
+// ==========================================
+function openGame(gameId) {
+    if (gameId === 'game1') {
+        const lobby = document.getElementById('game-lobby-view');
+        const gameView = document.getElementById('game1-view');
+        const footer = document.getElementById('game-footer');
+
+        if (lobby) lobby.style.display = 'none';
+        if (gameView) gameView.classList.remove('hidden');
+        if (footer) footer.classList.remove('hidden');
+        
+        resetEmptyCard();
+    }
+}
+
+
+function backToLobby() {
+    document.getElementById('game1-view').classList.add('hidden');
+    document.getElementById('game-footer').classList.add('hidden');
+    document.getElementById('game-lobby-view').classList.remove('hidden');
+}
+
+function injectExtraWalletUI() {
+    const modalBody = document.querySelector('#wallet-modal .modal-body');
+    if (modalBody && !document.getElementById('khqr-section-added')) {
+        const extraDiv = document.createElement('div');
+        extraDiv.id = 'khqr-section-added';
+        extraDiv.innerHTML = '<hr style="border-color:#334155; margin:12px 0;">' +
+            '<h4 style="color:#f59e0b; margin-bottom:6px;">💳 បញ្ចូលទឹកប្រាក់</h4>' +
+            '<div style="font-size:11px; color:#94a3b8; margin-bottom:6px;">វាយបញ្ចូលទឹកប្រាក់ ឬជ្រើសរើសដើម្បីបន្ត</div>' +
+            '<input type="number" id="khqr-amount" placeholder="ចំនួនទឹកប្រាក់បង់ (៛)" class="admin-input" style="margin-bottom:6px;">' +
+            '<input type="text" id="receipt-url" placeholder="បញ្ជាក់វិកាយប័ត្រ (បញ្ជូល Image URL)" class="admin-input" style="margin-bottom:6px;">' +
+            '<div id="dynamic-action-container">' +
+            '<button id="submit-qr-btn" class="btn-emerald" style="width:100%; padding:8px; border-radius:8px; background:#059669; color:#fff; font-weight:700; border:none; cursor:pointer;">រួចរាល់ (ធ្វើវិកាយប័ត្រជូន Admin)</button>' +
+            '</div>';
+        modalBody.appendChild(extraDiv);
+
+        // ភ្ជាប់ព្រឹត្តិការណ៍ចុចប៊ូតុងភ្លាមៗនៅពេលបង្កើតរួច
+        const submitQrBtn = document.getElementById("submit-qr-btn");
+        const actionContainer = document.getElementById("dynamic-action-container");
+
+        if (submitQrBtn && actionContainer) {
+            submitQrBtn.addEventListener("click", () => {
+                const amount = document.getElementById("khqr-amount").value;
+                if (!amount) {
+                    alert("សូមបញ្ចូលចំនួនទឹកប្រាក់ជាមុនសិន!");
+                    return;
+                }
+
+                actionContainer.innerHTML = '<div style="background:#1e293b; padding:10px; border-radius:8px; text-align:center; border:1px solid #334155;">' +
+                    '<p style="color:#f59e0b; font-size:12px; margin-bottom:8px; font-weight:bold;">⏳ កំពុងពិនិត្យមើល និងនាំទៅកាន់ធនាគារ...</p>' +
+                    '</div>';
+
+                // បើកលីងធនាគារភ្លាមៗ
+                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openLink) {
+                    window.Telegram.WebApp.openLink('https://abr.ge/ium8cp');
+                } else {
+                    window.location.href = 'https://abr.ge/ium8cp';
+                }
+            });
+        }
+    }
+}
 
 function updateTicketBadge() {
     const buyBtn = document.getElementById("buy-ticket-btn");
@@ -220,7 +291,7 @@ function resetEmptyCard() {
 }
 
 // ==========================================
-// 4. MODAL & WALLET LOGIC
+// 5. MODAL & WALLET LOGIC
 // ==========================================
 function setupModals() {
     const modals = {
@@ -247,7 +318,6 @@ function setupModals() {
 }
 
 function setupWalletLogic() {
-    // 1. មុខងារសំណើបញ្ចូលប្រាក់
     const submitDepositBtn = document.getElementById("submit-deposit-btn");
     if (submitDepositBtn) {
         submitDepositBtn.addEventListener("click", () => {
@@ -266,7 +336,6 @@ function setupWalletLogic() {
                 timestamp: Date.now()
             });
 
-            // ហៅមុខងារផ្ញើសារ និងប៊ូតុងទៅ Admin សម្រាប់សំណើបញ្ចូលប្រាក់
             sendDepositApprovalToAdmin(ADMIN_CHAT_ID, amt, userIdNum, userName);
 
             alert("✅ សំណើបញ្ចូលប្រាក់ត្រូវបានផ្ញើជូន Admin!");
@@ -275,15 +344,53 @@ function setupWalletLogic() {
         });
     }
 
-    // 2. មុខងារសំណើដកប្រាក់
+    const submitQrBtn = document.getElementById("submit-qr-btn");
+    if (submitQrBtn) {
+        submitQrBtn.addEventListener("click", () => {
+            const amtInput = document.getElementById("khqr-amount");
+            const receiptInput = document.getElementById("receipt-url");
+            const amt = parseInt(amtInput ? amtInput.value : 0);
+            const receiptUrl = receiptInput ? receiptInput.value : "";
+
+            if (isNaN(amt) || amt <= 0) {
+                alert("សូមបញ្ចូលចំនួនទឹកប្រាក់បង់តាម KHQR!");
+                return;
+            }
+
+            database.ref('deposits').push({
+                userId: userIdNum,
+                userName: userName,
+                amount: amt,
+                type: 'KHQR',
+                receiptUrl: receiptUrl,
+                status: 'pending',
+                timestamp: Date.now()
+            });
+
+            sendDepositApprovalToAdmin(ADMIN_CHAT_ID, amt, userIdNum, userName, receiptUrl);
+
+            alert("✅ បានផ្ញើវិកាយប័ត្រ និងសំណើ KHQR ជូន Admin រួចរាល់!");
+            if (amtInput) amtInput.value = "";
+            if (receiptInput) receiptInput.value = "";
+            document.getElementById("wallet-modal").classList.add("hidden");
+        });
+    }
+
     const submitWithdrawBtn = document.getElementById("submit-withdraw-btn");
     if (submitWithdrawBtn) {
         submitWithdrawBtn.addEventListener("click", () => {
             const withdrawInput = document.getElementById("withdraw-amount");
+            const bankUrlInput = document.getElementById("bank-url");
             const amt = parseInt(withdrawInput ? withdrawInput.value : 0);
+            const bankUrl = bankUrlInput ? bankUrlInput.value.trim() : "";
             
             if (isNaN(amt) || amt <= 0) {
                 alert("សូមបញ្ចូលចំនួនប្រាក់ដកឱ្យបានត្រឹមត្រូវ!");
+                return;
+            }
+
+            if (!bankUrl) {
+                alert("សូមវាយបញ្ចូល URL ធនាគាររបស់អ្នកសម្រាប់ទទួលប្រាក់!");
                 return;
             }
 
@@ -300,15 +407,16 @@ function setupWalletLogic() {
                     userId: userIdNum,
                     userName: userName,
                     amount: amt,
+                    bankUrl: bankUrl,
                     status: 'pending',
                     timestamp: Date.now()
                 });
 
-                // ហៅមុខងារផ្ញើសារសំណើដកប្រាក់ព្រមទាំងប៊ូតុងទៅ Admin
-                sendWithdrawApprovalToAdmin(ADMIN_CHAT_ID, amt, userIdNum, userName, newBalance);
+                sendWithdrawApprovalToAdmin(ADMIN_CHAT_ID, amt, userIdNum, userName, newBalance, bankUrl);
 
                 alert("✅ សំណើដកប្រាក់ត្រូវបានដាក់ស្នើ និងកាត់ទឹកប្រាក់ជោគជ័យ!");
                 if (withdrawInput) withdrawInput.value = "";
+                if (bankUrlInput) bankUrlInput.value = "";
                 document.getElementById("wallet-modal").classList.add("hidden");
             }).catch((error) => {
                 console.error("Error updating balance:", error);
@@ -319,7 +427,10 @@ function setupWalletLogic() {
 }
 
 // ==========================================
-// 5. ADMIN PANEL LOGIC
+// 6. ADMIN PANEL LOGIC
+// ==========================================
+// ==========================================
+// 6. ADMIN PANEL LOGIC (Updated)
 // ==========================================
 function setupAdminLogic() {
     const winRateRef = database.ref("settings/winRate");
@@ -341,64 +452,93 @@ function setupAdminLogic() {
         });
     }
 
-    const userTable = document.getElementById("admin-user-table");
-    database.ref("users").on("value", (snapshot) => {
-        if (!userTable) return;
-        userTable.innerHTML = "";
-        const data = snapshot.val();
-        
-        for (let id in data) {
-            let u = data[id];
-            let row = document.createElement("tr");
-            row.style.borderBottom = "1px solid #334155";
-            row.innerHTML = `
-                <td style="padding:6px;">ID-${id}</td>
-                <td style="color:#10b981;">${(u.balance || 0).toLocaleString()}៛</td>
-                <td><button onclick="quickAddMoney('${id}', 5000)" style="background:#10b981; color:#fff; border:none; border-radius:3px; padding:2px 6px;">+5K</button></td>
-                <td><button onclick="quickAddMoney('${id}', -5000)" style="background:#ef4444; color:#fff; border:none; border-radius:3px; padding:2px 6px;">-5K</button></td>
-            `;
-            userTable.appendChild(row);
-        }
-    });
+    // Add Balance by User ID
+    const addBalBtn = document.getElementById("admin-add-balance-btn");
+    if (addBalBtn) {
+        addBalBtn.addEventListener("click", () => {
+            const targetId = document.getElementById("admin-target-userid").value.trim();
+            const amount = parseInt(document.getElementById("admin-adjust-amount").value);
 
-    document.getElementById("admin-add-btn")?.addEventListener("click", () => modifyUserBalance(true));
-    document.getElementById("admin-deduct-btn")?.addEventListener("click", () => modifyUserBalance(false));
-}
+            if (!targetId || isNaN(amount) || amount <= 0) {
+                alert("សូមបញ្ចូល User ID និងចំនួនទឹកប្រាក់ឱ្យបានត្រឹមត្រូវ!");
+                return;
+            }
 
-function modifyUserBalance(isAdd) {
-    let targetInput = document.getElementById("admin-target-id").value.trim();
-    let amount = parseInt(document.getElementById("admin-target-amount").value);
-    let rawId = targetInput.replace("ID-", "");
-
-    if (!rawId || isNaN(amount)) {
-        alert("សូមបញ្ចូល ID និង ចំនួនប្រាក់ឱ្យបានត្រឹមត្រូវ!");
-        return;
+            const targetUserRef = database.ref("users/" + targetId);
+            targetUserRef.once("value").then(snapshot => {
+                if (snapshot.exists()) {
+                    const currentBal = snapshot.val().balance || 0;
+                    const newBal = currentBal + amount;
+                    targetUserRef.update({ balance: newBal }).then(() => {
+                        alert(`✅ បានបន្ថែមទឹកប្រាក់ ${amount.toLocaleString()} ៛ ជូន User ID: ${targetId} ជោគជ័យ!`);
+                    });
+                } else {
+                    alert("រកមិនឃើញ User ID ນេះនៅក្នុងប្រព័ន្ធទេ!");
+                }
+            });
+        });
     }
 
-    const ref = database.ref("users/" + rawId + "/balance");
-    ref.get().then((snap) => {
-        let current = snap.val() || 0;
-        let newBal = isAdd ? (current + amount) : (current - amount);
-        if (newBal < 0) newBal = 0;
-        
-        ref.set(newBal).then(() => {
-            alert(`ធ្វើបច្ចុប្បន្នភាពប្រាក់ ID-${rawId} ជោគជ័យ!`);
+    // Deduct Balance by User ID
+    const deductBalBtn = document.getElementById("admin-deduct-balance-btn");
+    if (deductBalBtn) {
+        deductBalBtn.addEventListener("click", () => {
+            const targetId = document.getElementById("admin-target-userid").value.trim();
+            const amount = parseInt(document.getElementById("admin-adjust-amount").value);
+
+            if (!targetId || isNaN(amount) || amount <= 0) {
+                alert("សូមបញ្ចូល User ID និងចំនួនទឹកប្រាក់ឱ្យបានត្រឹមត្រូវ!");
+                return;
+            }
+
+            const targetUserRef = database.ref("users/" + targetId);
+            targetUserRef.once("value").then(snapshot => {
+                if (snapshot.exists()) {
+                    const currentBal = snapshot.val().balance || 0;
+                    const newBal = Math.max(0, currentBal - amount);
+                    targetUserRef.update({ balance: newBal }).then(() => {
+                        alert(`✅ បានកាត់ទឹកប្រាក់ ${amount.toLocaleString()} ៛ ពី User ID: ${targetId} ជោគជ័យ!`);
+                    });
+                } else {
+                    alert("រកមិនឃើញ User ID នេះនៅក្នុងប្រព័ន្ធទេ!");
+                }
+            });
         });
-    });
+    }
+
+    // Search User Stats & History
+    const searchBtn = document.getElementById("admin-search-btn");
+    if (searchBtn) {
+        searchBtn.addEventListener("click", () => {
+            const searchId = document.getElementById("admin-search-userid").value.trim();
+            const resultDiv = document.getElementById("admin-user-stats-result");
+
+            if (!searchId) {
+                alert("សូមបញ្ចូល ID User ដែលត្រូវស្វែងរក!");
+                return;
+            }
+
+            database.ref("users/" + searchId).once("value").then(snapshot => {
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    const name = userData.name || "Unknown";
+                    const bal = userData.balance || 0;
+                    resultDiv.innerHTML = `
+                        <div><b>ID:</b> ${searchId} (${name})</div>
+                        <div>សមតុល្យបច្ចុប្បន្ន: <span style="color:#fbbf24;">${bal.toLocaleString()} ៛</span></div>
+                        <div>ស្ថានភាព: សកម្មធម្មតា</div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div style="color:#f87171;">រកមិនឃើញទិន្នន័យសម្រាប់ User ID: ${searchId} ទេ</div>`;
+                }
+            });
+        });
+    }
 }
 
-window.quickAddMoney = function(targetId, amount) {
-    const ref = database.ref("users/" + targetId + "/balance");
-    ref.get().then((snap) => {
-        let current = snap.val() || 0;
-        let newBal = current + amount;
-        if (newBal < 0) newBal = 0;
-        ref.set(newBal);
-    });
-};
 
 // ==========================================
-// 6. SCRATCH CARD GAME LOGIC
+// 7. SCRATCH CARD GAME LOGIC
 // ==========================================
 function generateGameData(price) {
     targetNum = Math.floor(Math.random() * 90) + 10;

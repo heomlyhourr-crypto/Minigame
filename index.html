@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mini Game - ឆ្នោតកោសសំណាង</title>
+    <title>Mini Game - ហ្គេមកម្សាន្ត</title>
     
-    <!-- ១. Telegram WebApp SDK (ត្រូវដាក់មុនគេបង្អស់) -->
+    <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-    <!-- ២. Firebase Compat SDKs -->
+    <!-- Firebase Compat SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
@@ -18,13 +18,13 @@
 </head>
 <body>
 
-    <div class="app-container">
+    <class="app-container">
         <!-- Header -->
         <header class="app-header">
             <button id="close-btn" class="icon-btn">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
             </button>
-            <h1 class="header-title">Mini Game</h1>
+            <h1 class="header-title">Mini Game Lobby</h1>
             <div class="header-right">
                 <button id="sound-toggle" class="icon-btn active-sound">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5zM19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"></path></svg>
@@ -32,7 +32,7 @@
             </div>
         </header>
 
-        <main class="main-content">
+        <class="main-content">
             <!-- Profile Card -->
             <div class="profile-card">
                 <div class="profile-top">
@@ -57,62 +57,94 @@
                 </div>
             </div>
 
-            <!-- Action Navigation -->
+              <!-- Action Navigation -->
             <div class="action-grid">
                 <button id="wallet-btn" class="act-btn btn-blue">💳 កាបូបប្រាក់</button>
                 <button id="history-btn" class="act-btn btn-indigo">📜 ប្រវត្តិ</button>
                 <button id="admin-btn" class="act-btn btn-red" style="display: none;">⚙️ Admin</button>
             </div>
 
-            <!-- Ticket Price Buttons -->
-            <div class="price-grid">
-                <button class="price-btn active" data-price="1000">1,000 ៛</button>
-                <button class="price-btn" data-price="2000">2,000 ៛</button>
-                <button class="price-btn" data-price="4000">4,000 ៛</button>
-                <button class="price-btn" data-price="5000">5,000 ៛</button>
-                <button class="price-btn" data-price="10000">10,000 ៛</button>
-                <button id="auto-scratch-btn" class="price-btn btn-teal">⚡ កោសទាំងអស់</button>
+            <!-- VIEW 1: GAME LOBBY (ទំព័រជ្រើសរើសហ្គេម) -->
+            <div id="game-lobby-view" class="lobby-container">
+                <h3 class="lobby-title">🎮 ជ្រើសរើសហ្គេមកម្សាន្ត</h3>
+                <div class="game-list-grid">
+                    <!-- Game 1: Scratch Card -->
+                    <div class="game-card" onclick="openGame('game1')">
+                        <div class="game-card-icon">🎫</div>
+                        <div class="game-card-details">
+                            <h4>ឆ្នោតកោសសំណាង</h4>
+                            <p>កោសស្វែងរកសំណាងឈ្នះរង្វាន់ធំ</p>
+                            <span class="badge-play">▶ លេងឥឡូវនេះ</span>
+                        </div>
+                    </div>
+
+                    <!-- Game 2: Coming Soon -->
+                    <div class="game-card coming-soon">
+                        <div class="game-card-icon">🎡</div>
+                        <div class="game-card-details">
+                            <h4>វិលកង់សំណាង</h4>
+                            <p>ហ្គេមសប្បាយៗនឹងមកដល់ឆាប់ៗ</p>
+                            <span class="badge-soon">Coming Soon</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Scratch Canvas Area -->
-            <div class="scratch-card-box">
-                <canvas id="scratch-canvas"></canvas>
-                <div id="ticket-content" class="ticket-wrapper">
-                    <div class="ticket-header">
-                        <div class="khmer-moul ticket-title">កងមាស សំណាងមាស</div>
-                        <div class="ticket-sub">
-                            <span>សន្លឹកឆ្នោតផ្សងសំណាង</span>
-                            <span id="ticket-price-display" class="price-badge">1,000៛</span>
-                        </div>
-                    </div>
+            <!-- VIEW 2: GAME 1 (ផ្ទាំងលេងហ្គេមកោសឆ្នោត - លាក់ទុកមុន) -->
+            <div id="game1-view" class="game-play-view hidden">
+                <button onclick="backToLobby()" class="back-lobby-btn">⬅️ ត្រឡប់ទៅវិញ</button>
+                
+                <!-- Ticket Price Buttons -->
+                <div class="price-grid" style="margin-top: 8px;">
+                    <button class="price-btn active" data-price="1000">1,000 ៛</button>
+                    <button class="price-btn" data-price="2000">2,000 ៛</button>
+                    <button class="price-btn" data-price="4000">4,000 ៛</button>
+                    <button class="price-btn" data-price="5000">5,000 ៛</button>
+                    <button class="price-btn" data-price="10000">10,000 ៛</button>
+                    <button id="auto-scratch-btn" class="price-btn btn-teal">⚡ កោសទាំងអស់</button>
+                </div>
 
-                    <div class="target-box-container">
-                        <div class="target-box">
-                            <div class="target-title">លេខផ្ទៀងផ្ទាត់ (Target Number)</div>
-                            <div class="target-value-wrap">
-                                <span class="target-label">លេខសំណាង:</span>
-                                <span id="target-number" class="target-number">--</span>
+                <!-- Scratch Canvas Area -->
+                <div class="scratch-card-box" style="margin-top: 10px;">
+                    <canvas id="scratch-canvas"></canvas>
+                    <div id="ticket-content" class="ticket-wrapper">
+                        <div class="ticket-header">
+                            <div class="khmer-moul ticket-title">កងមាស សំណាងមាស</div>
+                            <div class="ticket-sub">
+                                <span>សន្លឹកឆ្នោតផ្សងសំណាង</span>
+                                <span id="ticket-price-display" class="price-badge">1,000៛</span>
                             </div>
                         </div>
-                    </div>
 
-                    <div id="prize-grid" class="prize-grid-container"></div>
+                        <div class="target-box-container">
+                            <div class="target-box">
+                                <div class="target-title">លេខផ្ទៀងផ្ទាត់ (Target Number)</div>
+                                <div class="target-value-wrap">
+                                    <span class="target-label">លេខសំណាង:</span>
+                                    <span id="target-number" class="target-number">--</span>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div id="ticket-footer-msg" class="ticket-footer">
-                        ចុច 'ទិញសន្លឹកឆ្នោត' ដើម្បីចាប់ផ្តើម!
+                        <div id="prize-grid" class="prize-grid-container"></div>
+
+                        <div id="ticket-footer-msg" class="ticket-footer">
+                            ចុច 'ទិញសន្លឹកឆ្នោត' ដើម្បីចាប់ផ្តើម!
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
 
-        <footer class="bottom-footer">
+        <!-- Bottom Footer (Show only inside Game 1) -->
+        <footer id="game-footer" class="bottom-footer hidden">
             <button id="buy-ticket-btn" class="buy-button">
                 <span>ទិញសន្លឹកឆ្នោត</span>
                 <span id="buy-price-tag" class="buy-price-badge">1,000 ៛</span>
             </button>
         </footer>
 
-        <!-- Modal Wallet -->
+        <!-- Modals -->
         <div id="wallet-modal" class="modal-backdrop hidden">
             <div class="modal-box">
                 <div class="modal-header">
@@ -131,7 +163,6 @@
             </div>
         </div>
 
-        <!-- Modal History -->
         <div id="history-modal" class="modal-backdrop hidden">
             <div class="modal-box">
                 <div class="modal-header">
@@ -143,44 +174,51 @@
                 </div>
             </div>
         </div>
-
-        <!-- Modal Admin Panel -->
+          <!-- Admin Modal -->
         <div id="admin-modal" class="modal-backdrop hidden">
-            <div class="modal-box" style="max-width: 400px;">
+            <div class="modal-box" style="max-width: 420px; max-height: 90vh; overflow-y: auto;">
                 <div class="modal-header">
-                    <h3 class="admin-title">⚙️ ផ្ទាំងគ្រប់គ្រង (Admin Panel)</h3>
+                    <h3 class="admin-title">⚙️ Admin Control Panel</h3>
                     <button class="close-modal">✕</button>
                 </div>
-                <div class="admin-form">
-                    <label>🎯 ភាគរយឈ្នះ (Win Rate %):</label>
-                    <input type="number" id="admin-win-rate" class="admin-input" min="0" max="100">
-                    <button id="save-winrate-btn" class="btn-emerald">រក្សាទុក Win Rate</button>
-                    <hr style="border-color:#334155;">
-                    <label>💳 កែប្រែសមតុល្យ User (តាម ID):</label>
-                    <input type="text" id="admin-target-id" placeholder="ID-449022" class="admin-input">
-                    <input type="number" id="admin-target-amount" placeholder="ចំនួនប្រាក់ (៛)" class="admin-input">
-                    <div class="input-group">
-                        <button id="admin-add-btn" class="btn-emerald" style="flex:1;">➕ បញ្ចូល</button>
-                        <button id="admin-deduct-btn" class="btn-danger" style="flex:1;">➖ ដក</button>
+                <div class="admin-form" style="display: flex; flex-direction: column; gap: 10px;">
+                    <!-- Win Rate Setting -->
+                    <div style="background: #0f172a; padding: 10px; border-radius: 8px; border: 1px solid #334155;">
+                        <label style="font-size: 12px; color: #f59e0b; font-weight: bold;">🎯 Win Rate (%)</label>
+                        <div style="display: flex; gap: 8px; margin-top: 4px;">
+                            <input type="number" id="admin-win-rate" class="admin-input" min="0" max="100" style="flex: 1; margin: 0;">
+                            <button id="save-winrate-btn" class="btn-emerald" style="padding: 6px 12px; font-size: 11px;">រក្សាទុក</button>
+                        </div>
                     </div>
-                    <hr style="border-color:#334155;">
-                    <label>📊 អ្នកលេងបច្ចុប្បន្ន (Live Users):</label>
-                    <div style="overflow-x:auto; max-height: 150px;">
-                        <table style="width:100%; font-size:11px; text-align:center; border-collapse:collapse;">
-                            <thead>
-                                <tr style="background:#0f172a; color:#f59e0b;">
-                                    <th>ID</th><th>សមតុល្យ</th><th>បញ្ចូល</th><th>ដក</th>
-                                </tr>
-                            </thead>
-                            <tbody id="admin-user-table"></tbody>
-                        </table>
+
+                    <!-- Add / Deduct Balance by User ID -->
+                    <div style="background: #0f172a; padding: 10px; border-radius: 8px; border: 1px solid #334155;">
+                        <label style="font-size: 12px; color: #f59e0b; font-weight: bold;">👤 គ្រប់គ្រងសមតុល្យ User</label>
+                        <input type="text" id="admin-target-userid" placeholder="ID User (ឧ. 6995747279)" class="admin-input" style="margin-top: 4px;">
+                        <input type="number" id="admin-adjust-amount" placeholder="ចំនួនទឹកប្រាក់ (៛)" class="admin-input" style="margin-top: 6px;">
+                        <div style="display: flex; gap: 8px; margin-top: 8px;">
+                            <button id="admin-add-balance-btn" class="btn-emerald" style="flex: 1; font-size: 11px; padding: 6px;">➕ បន្ថែមលុយ</button>
+                            <button id="admin-deduct-balance-btn" class="btn-danger" style="flex: 1; font-size: 11px; padding: 6px;">➖ កាត់ប្រាក់</button>
+                        </div>
+                    </div>
+
+                    <!-- User History & Stats Lookup -->
+                    <div style="background: #0f172a; padding: 10px; border-radius: 8px; border: 1px solid #334155;">
+                        <label style="font-size: 12px; color: #f59e0b; font-weight: bold;">📊 ប្រវត្តិ និងស្ថិតិ User ID</label>
+                        <div style="display: flex; gap: 8px; margin-top: 4px;">
+                            <input type="text" id="admin-search-userid" placeholder="ស្វែងរក ID User..." class="admin-input" style="flex: 1; margin: 0;">
+                            <button id="admin-search-btn" class="btn-blue" style="padding: 6px 12px; font-size: 11px; border: none; border-radius: 6px; color: #fff; font-weight: bold; cursor: pointer;">ស្វែងរក</button>
+                        </div>
+                        <div id="admin-user-stats-result" style="margin-top: 8px; font-size: 11px; color: #cbd5e1; background: #1e293b; padding: 8px; border-radius: 6px;">
+                            <div>ID: - / more</div>
+                            <div>ឈ្នះ: 0 | ចាញ់: 0 | Total: 0 ៛</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- ៣. ដាក់ script.js នៅខាងក្រោមគេបង្អស់ -->
+
     <script src="script.js"></script>
 </body>
 </html>
