@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="admin-app">
+
+    <!-- HEADER -->
+    <header class="admin-header">
+        <div>
+            <small>ADMIN PANEL</small>
+            <h2>Dashboard</h2>
+        </div>
+        <div class="admin-user" onclick="toggleSidebar()">🛡️</div>
+    </header>
+
+    <!-- DATE -->
+    <div class="date-card">
+        📅 <span id="date">Loading...</span>
+    </div>
+
+    <!-- PAGE SECTION: DASHBOARD -->
+    <div id="dashboard" class="page-section">
+        
+        <!-- STATS -->
+        <section class="stats">
+            <div class="stat">
+                <span>💰</span>
+                <small>Total Deposit</small>
+                <strong id="totalDeposit">$0.00</strong>
+            </div>
+
+            <div class="stat">
+                <span>💸</span>
+                <small>Total Withdraw</small>
+                <strong id="totalWithdraw">$0.00</strong>
+            </div>
+
+            <div class="stat">
+                <span>👥</span>
+                <small>Users</small>
+                <strong id="totalUsers">0</strong>
+            </div>
+
+            <div class="stat">
+                <span>🎮</span>
+                <small>Total Balance</small>
+                <strong id="totalBalance">0 ៛</strong>
+            </div>
+        </section>
+
+        <!-- PENDING REQUESTS -->
+        <section class="panel">
+            <div class="panel-title">
+                <h3>Pending Requests</h3>
+                <span>LIVE</span>
+            </div>
+            <div id="requests"></div>
+        </section>
+
+<!-- USER SEARCH & OVERVIEW -->
+<section class="panel">
+    <div class="panel-title">
+        <h3>User Overview</h3>
+    </div>
+
+    <!-- SEARCH BAR FULL WIDTH -->
+    <div style="display: flex; gap: 8px; margin-top: 12px; width: 100%;">
+        <input type="text" id="userIdInput" placeholder="Enter User ID..." style="flex: 1; padding: 10px 14px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #fff; font-size: 13px; outline: none;">
+        <button onclick="searchUser()" style="padding: 10px 20px; border-radius: 8px; border: none; background: #22c55e; color: #0b1329; font-weight: bold; font-size: 13px; cursor: pointer; white-space: nowrap;">Search</button>
+    </div>
+
+    <!-- SEARCH RESULT CONTAINER -->
+    <div id="userResult" class="hidden" style="margin-top: 12px;"></div>
+</section>
+            <!-- SEARCH RESULT CONTAINER -->
+            <div id="userResult" class="hidden" style="margin-top: 10px;"></div>
+        </section>
+
+        <!-- GAME SETTINGS -->
+        <section class="panel">
+            <div class="panel-title">
+                <h3>Game Settings</h3>
+                <button onclick="openGameForm()">＋ Add Game</button>
+            </div>
+            <div id="gameList"></div>
+        </section>
+
+    </div>
+
+    <!-- PAGE SECTION: WALLET -->
+    <div id="wallet" class="page-section hidden">
+        <section class="panel">
+            <div class="panel-title">
+                <h3>Wallet & Money Management</h3>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px; padding: 10px 0;">
+                <input type="number" id="moneyAmount" placeholder="Amount (ចំនួនទឹកប្រាក់)" style="padding: 10px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #fff;">
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="addMoney()" style="flex:1; background:#22c55e; color:#fff; padding:10px; border-radius:8px; border:none; cursor:pointer;">+ Deposit (បញ្ចូល)</button>
+                    <button onclick="removeMoney()" style="flex:1; background:#ef4444; color:#fff; padding:10px; border-radius:8px; border:none; cursor:pointer;">- Withdraw (ដក)</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+<!-- ALL USERS LIST PANEL -->
+<section class="panel">
+    <div class="panel-header-custom">
+        <h3>All Users List</h3>
+        <span class="user-count-badge" id="userCountBadge">0 Users</span>
+    </div>
+
+    <!-- SEARCH BAR -->
+    <div class="table-search-box">
+        <input type="text" id="tableSearch" onkeyup="filterUsers()" placeholder="🔍 Search User ID...">
+    </div>
+
+    <!-- RESPONSIVE TABLE CONTAINER -->
+    <div class="table-responsive">
+        <table class="modern-table">
+            <thead>
+                <tr>
+                    <th>USER ID</th>
+                    <th class="text-right">BALANCE</th>
+                    <th class="text-right">WIN</th>
+                    <th class="text-right">LOSE</th>
+                    <th class="text-center">ACTION</th>
+                </tr>
+            </thead>
+            <tbody id="userTable">
+                <!-- Rendered by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+</section>
+    <!-- PAGE SECTION: SETTINGS -->
+    <div id="settings" class="page-section hidden">
+        <section class="panel">
+            <div class="panel-title">
+                <h3>Admin Settings</h3>
+            </div>
+            <p style="color: #94a3b8; padding: 10px 0;">System Configuration & Firebase Connection Active.</p>
+        </section>
+    </div>
+
+    <!-- GAME FORM MODAL -->
+    <div id="gameForm" class="modal">
+        <div class="form">
+            <div class="form-head">
+                <h3>Add New Game</h3>
+                <button onclick="closeGameForm()">✕</button>
+            </div>
+
+            <input id="gameName" placeholder="Game Name">
+            <input id="gameLogo" placeholder="Game Logo Emoji (e.g. 🎰)">
+            <input id="gameImage" placeholder="Game Image URL">
+            <input id="gameLink" placeholder="Game Link">
+            <input id="winRate" type="number" placeholder="Win Rate %">
+
+            <button class="save" onclick="addGame()">Save Game</button>
+        </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <nav class="admin-nav">
+        <button class="nav-item active" onclick="showSection('dashboard', event)">
+            📊
+            <small>Dashboard</small>
+        </button>
+        <button class="nav-item" onclick="showSection('wallet', event)">
+            💰
+            <small>Wallet</small>
+        </button>
+        <button class="nav-item" onclick="showSection('users', event)">
+            👥
+            <small>Users</small>
+        </button>
+        <button class="nav-item" onclick="showSection('settings', event)">
+            ⚙️
+            <small>Settings</small>
+        </button>
+    </nav>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<!-- FIREBASE SDKs -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<!-- ADMIN JS -->
+<script src="admin.js"></script>
+</body>
+</html>

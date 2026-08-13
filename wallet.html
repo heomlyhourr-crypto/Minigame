@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Wallet</title>
+    <link rel="stylesheet" href="wallet.css">
+</head>
+<body>
+
+<div class="wallet-app">
+
+    <!-- HEADER -->
+    <header class="wallet-header">
+        <button onclick="goBack()">←</button>
+        <h2>Wallet</h2>
+        <span></span>
+    </header>
+
+    <!-- BALANCE -->
+    <section class="wallet-balance">
+        <small>Available Balance</small>
+        <h1>$<span id="balance">1,250.00</span></h1>
+        <span class="status">● Wallet Active</span>
+    </section>
+
+    <!-- TABS -->
+    <div class="wallet-tabs">
+        <button id="depositTab" onclick="setMode('deposit')">＋ Deposit</button>
+        <button id="withdrawTab" onclick="setMode('withdraw')">↗ Withdraw</button>
+    </div>
+
+    <!-- FORM -->
+    <main class="wallet-content">
+        <label>ចំនួនទឹកប្រាក់</label>
+        <div class="amount-box">
+            <span>$</span>
+            <input id="amount" type="number" placeholder="0.00">
+        </div>
+
+        <!-- PAYMENT INFO -->
+        <section class="payment-card">
+            <div class="payment-title">
+                <strong>Payment Information</strong>
+                <span>ADMIN</span>
+            </div>
+            <div class="payment-image">
+                <div>💳</div>
+                <p>Admin Payment QR</p>
+                <small>Admin អាចប្ដូរ QR នៅពេល ភ្ជាប់ Database</small>
+            </div>
+        </section>
+
+        <!-- BILL -->
+        <label class="bill-label">បញ្ចូល Bill / Screenshot</label>
+        <label class="upload-box" for="bill">
+            <span>📷</span>
+            <strong>Upload Bill</strong>
+            <small>JPG / PNG</small>
+        </label>
+        <input id="bill" type="file" accept="image/*" hidden>
+
+        <div id="preview" class="preview"></div>
+
+        <!-- SEND -->
+        <button class="send-button" onclick="sendRequest()">📤 Send to Admin</button>
+
+        <p class="notice">បន្ទាប់ពីផ្ញើ សូមរង់ចាំ Admin ពិនិត្យ និងអនុម័ត deal</p>
+
+        <!-- HISTORY -->
+        <section class="history">
+            <div class="history-title">
+                <h3>Recent Requests</h3>
+                <button onclick="clearHistory()">Clear</button>
+            </div>
+            <div id="historyList"></div>
+        </section>
+
+    </main>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

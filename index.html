@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GameHub</title>
+  
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+    <!-- ================= HEADER ================= -->
+    <header class="header">
+        <div class="profile">
+            <div class="avatar">👤</div>
+            <div class="profile-text">
+                <span>សួស្តី</span>
+                <strong>User #82931</strong>
+            </div>
+        </div>
+
+        <div class="header-buttons">
+            <button class="header-btn" onclick="showNotification()">
+                🔔
+                <i></i>
+            </button>
+            <button class="header-btn" onclick="openMenu()">
+                ☰
+            </button>
+        </div>
+    </header>
+
+    <!-- ================= MAIN ================= -->
+    <main class="main-content">
+
+        <!-- WALLET -->
+        <section class="wallet-card">
+            <div class="wallet-top">
+                <div>
+                    <small>ទឹកប្រាក់ក្នុង Wallet</small>
+                    <h1>$<span id="balance">1,250.00</span></h1>
+                </div>
+                <div class="wallet-icon">💰</div>
+            </div>
+
+            <div class="wallet-status">
+                <span class="online-dot"></span>
+                Wallet Active
+            </div>
+
+            <div class="wallet-buttons">
+                <button class="deposit-btn" onclick="goWallet('deposit')">
+                    ＋ ដាក់ប្រាក់
+                </button>
+                <button class="withdraw-btn" onclick="goWallet('withdraw')">
+                    ↗ ដកប្រាក់
+                </button>
+            </div>
+        </section>
+
+        <!-- QUICK MENU -->
+        <section class="quick-menu">
+            <button onclick="showMessage('Gift')">
+                <span>🎁</span>
+                <small>Gift</small>
+            </button>
+            <button onclick="showMessage('History')">
+                <span>📜</span>
+                <small>History</small>
+            </button>
+            <button onclick="showMessage('VIP')">
+                <span>👑</span>
+                <small>VIP</small>
+            </button>
+            <button onclick="showMessage('Support')">
+                <span>💬</span>
+                <small>Support</small>
+            </button>
+        </section>
+
+        <!-- PROMOTION -->
+        <section class="promotion">
+            <div class="promotion-content">
+                <span>🎁 SPECIAL OFFER</span>
+                <h2>WELCOME BONUS</h2>
+                <p>ទទួលបានរង្វាន់ពិសេស សម្រាប់ការលេងថ្ងៃនេះ</p>
+                <button onclick="showMessage('Promotion')">CLAIM NOW</button>
+            </div>
+            <div class="promotion-circle">✨</div>
+        </section>
+
+        <!-- GAME CATEGORY -->
+        <section class="section">
+            <div class="section-title">
+                <h2>🎮 ប្រភេទហ្គេម</h2>
+                <span>មើលទាំងអស់</span>
+            </div>
+
+            <div class="categories">
+                <button class="category active" onclick="filterGames('all',this)">ទាំងអស់</button>
+                <button class="category" onclick="filterGames('slot',this)">🎰 Slots</button>
+                <button class="category" onclick="filterGames('fish',this)">🐟 Fish</button>
+                <button class="category" onclick="filterGames('race',this)">🏎 Race</button>
+                <button class="category" onclick="filterGames('macau',this)">🎲 Macau</button>
+            </div>
+        </section>
+
+        <!-- GAMES -->
+        <section class="section">
+            <div class="section-title">
+                <h2>🔥 ហ្គេមពេញនិយម</h2>
+                <span>See All</span>
+            </div>
+
+            <div class="game-grid">
+                <div class="game-card" data-type="slot">
+                    <div class="game-image slot-bg">
+                        <label>HOT</label>
+                        🎰
+                    </div>
+                    <div class="game-info">
+                        <strong>Lucky Spin</strong>
+                        <small>Slots · 1,245 Players</small>
+                        <button onclick="playGame('Lucky Spin')">PLAY</button>
+                    </div>
+                </div>
+
+                <div class="game-card" data-type="fish">
+                    <div class="game-image fish-bg">
+                        <label>HOT</label>
+                        🐠
+                    </div>
+                    <div class="game-info">
+                        <strong>Ocean King</strong>
+                        <small>Fish · 982 Players</small>
+                        <button onclick="playGame('Ocean King')">PLAY</button>
+                    </div>
+                </div>
+
+                <div class="game-card" data-type="race">
+                    <div class="game-image race-bg">
+                        🏎️
+                    </div>
+                    <div class="game-info">
+                        <strong>Speed Race</strong>
+                        <small>Race · 731 Players</small>
+                        <button onclick="playGame('Speed Race')">PLAY</button>
+                    </div>
+                </div>
+
+                <div class="game-card" data-type="macau">
+                    <div class="game-image macau-bg">
+                        🎲
+                    </div>
+                    <div class="game-info">
+                        <strong>Macau Club</strong>
+                        <small>Macau · 643 Players</small>
+                        <button onclick="playGame('Macau Club')">PLAY</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LIVE -->
+        <section class="section">
+            <div class="section-title">
+                <h2>🟢 Live Players</h2>
+                <span class="live-text">LIVE</span>
+            </div>
+
+            <div class="live-list">
+                <div class="live-user">
+                    <div class="live-avatar">👨</div>
+                    <div>
+                        <strong>Player 4821</strong>
+                        <small>Lucky Spin</small>
+                    </div>
+                    <b>+$128.50</b>
+                </div>
+
+                <div class="live-user">
+                    <div class="live-avatar">👩</div>
+                    <div>
+                        <strong>Player 9132</strong>
+                        <small>Ocean King</small>
+                    </div>
+                    <b>+$76.20</b>
+                </div>
+
+                <div class="live-user">
+                    <div class="live-avatar">🧑</div>
+                    <div>
+                        <strong>Player 2208</strong>
+                        <small>Macau Club</small>
+                    </div>
+                    <b>+$215.00</b>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================= BOTTOM NAV ================= -->
+  
+    <nav class="bottom-nav">
+        <button class="nav active" onclick="showMessage('Home')">
+            <span>⌂</span>
+            <small>Home</small>
+        </button>
+
+        <button class="nav" onclick="showMessage('Games')">
+            <span>🎮</span>
+            <small>Games</small>
+        </button>
+
+        <button class="nav-center" onclick="showMessage('Game Center')">
+            🎮
+        </button>
+
+        <button class="nav" onclick="showMessage('History')">
+            <span>📜</span>
+            <small>History</small>
+        </button>
+
+        <button class="nav" onclick="openMenu()">
+            <span>☰</span>
+            <small>Menu</small>
+        </button>
+    </nav>
+
+    <!-- ================= TOAST ================= -->
+    <div id="toast" class="toast">Done</div>
+
+    <!-- MENU -->
+    <div id="menu" class="menu-overlay" onclick="closeMenu()">
+        <div class="menu-panel" onclick="event.stopPropagation()">
+            <div class="menu-header">
+                <h2>Menu</h2>
+                <button onclick="closeMenu()">✕</button>
+            </div>
+
+            <button onclick="showMessage('Profile')">👤 Profile</button>
+            <button onclick="goWallet('deposit')">💰 Wallet</button>
+            
+            <!-- 🎯 កែសម្រួលត្រង់នេះ៖ ឱ្យបិទ Menu និង បើក History Modal -->
+          
+   <button onclick="openModal('historyModal'); loadHistory();">
+        📜<br><small>History</small>
+    </button>
+    
+    <button onclick="openModal('vipModal')">👑<br><small>VIP</small></button>
+    <button onclick="openSupport()">💬<br><small>Support</small></button>
+        </div>
+    </div>
+
+</div>
+
+<!-- 📜 HISTORY MODAL POPUP -->
+<div id="historyModal" class="modal-overlay hidden">
+    <div class="history-modal-box">
+        <div class="history-header">
+            <h3>📜 ប្រវត្តិប្រតិបត្តិការ (History)</h3>
+            <button class="btn-close-modal" onclick="closeModal('historyModal')">✕</button>
+        </div>
+
+        <!-- កន្លែងបង្ហាញបញ្ជីប្រវត្តិ -->
+        <div id="historyList" class="history-list">
+            <p class="loading-text">កំពុងទាញយកទិន្នន័យ...</p>
+        </div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
