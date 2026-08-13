@@ -25,3 +25,8 @@ git commit -m "Update full index.html"
 git remote add origin https://github.com/heomlyhourr-crypto/Minigame.git
 git remote -v
 git push -u origin master
+cd "/public"
+git add .
+git commit -m "Update full index.html"
+git push origin main
+ls
