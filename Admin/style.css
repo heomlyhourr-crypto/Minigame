@@ -629,3 +629,36 @@ button {
 .btn-more-action:active {
     transform: scale(0.95);
 }
+/* =========================================
+   FIX MODAL OVERFLOW & IMAGE PREVIEW
+========================================= */
+.modal-box {
+    max-height: 85vh; /* មិនឱ្យធំជាង ៨៥% នៃអេក្រង់ */
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* អនុញ្ញាតឱ្យ Scroll បាន */
+    position: relative;
+}
+
+/* កម្រិតទំហំរូបភាពមិនឱ្យធំពេក */
+.receipt-preview-img {
+    width: 100%;
+    max-height: 180px; /* កម្រិតកម្ពស់រូបត្រឹម 180px */
+    object-fit: contain;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    margin: 10px 0;
+    background: #020617;
+}
+
+/* ធ្វើឱ្យប៊ូតុងផ្ញើនៅជាប់ខាងក្រោមជានិច្ច */
+.modal-actions {
+    position: sticky;
+    bottom: 0;
+    background: #0f172a;
+    padding-top: 10px;
+    margin-top: auto;
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}

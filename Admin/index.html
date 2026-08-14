@@ -65,23 +65,20 @@
             <div id="requests"></div>
         </section>
 
-<!-- USER SEARCH & OVERVIEW -->
-<section class="panel">
-    <div class="panel-title">
-        <h3>User Overview</h3>
-    </div>
+        <!-- USER SEARCH & OVERVIEW -->
+        <section class="panel">
+            <div class="panel-title">
+                <h3>User Overview</h3>
+            </div>
 
-    <!-- SEARCH BAR FULL WIDTH -->
-    <div style="display: flex; gap: 8px; margin-top: 12px; width: 100%;">
-        <input type="text" id="userIdInput" placeholder="Enter User ID..." style="flex: 1; padding: 10px 14px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #fff; font-size: 13px; outline: none;">
-        <button onclick="searchUser()" style="padding: 10px 20px; border-radius: 8px; border: none; background: #22c55e; color: #0b1329; font-weight: bold; font-size: 13px; cursor: pointer; white-space: nowrap;">Search</button>
-    </div>
+            <!-- SEARCH BAR FULL WIDTH -->
+            <div style="display: flex; gap: 8px; margin-top: 12px; width: 100%;">
+                <input type="text" id="userIdInput" placeholder="Enter User ID..." style="flex: 1; padding: 10px 14px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #fff; font-size: 13px; outline: none;">
+                <button onclick="searchUser()" style="padding: 10px 20px; border-radius: 8px; border: none; background: #22c55e; color: #0b1329; font-weight: bold; font-size: 13px; cursor: pointer; white-space: nowrap;">Search</button>
+            </div>
 
-    <!-- SEARCH RESULT CONTAINER -->
-    <div id="userResult" class="hidden" style="margin-top: 12px;"></div>
-</section>
             <!-- SEARCH RESULT CONTAINER -->
-            <div id="userResult" class="hidden" style="margin-top: 10px;"></div>
+            <div id="userResult" class="hidden" style="margin-top: 12px;"></div>
         </section>
 
         <!-- GAME SETTINGS -->
@@ -111,36 +108,39 @@
         </section>
     </div>
 
-<!-- ALL USERS LIST PANEL -->
-<section class="panel">
-    <div class="panel-header-custom">
-        <h3>All Users List</h3>
-        <span class="user-count-badge" id="userCountBadge">0 Users</span>
+    <!-- PAGE SECTION: ALL USERS LIST (🎯 ភ្ជាប់ចូល Container អត្ថបទ id="users") -->
+    <div id="users" class="page-section hidden">
+        <section class="panel">
+            <div class="panel-header-custom">
+                <h3>All Users List</h3>
+                <span class="user-count-badge" id="userCountBadge">0 Users</span>
+            </div>
+
+            <!-- SEARCH BAR -->
+            <div class="table-search-box">
+                <input type="text" id="tableSearch" onkeyup="filterUsers()" placeholder="🔍 Search User ID...">
+            </div>
+
+            <!-- RESPONSIVE TABLE CONTAINER -->
+            <div class="table-responsive">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>USER ID</th>
+                            <th class="text-right">BALANCE</th>
+                            <th class="text-right">WIN</th>
+                            <th class="text-right">LOSE</th>
+                            <th class="text-center">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTable">
+                        <!-- Rendered by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </div>
 
-    <!-- SEARCH BAR -->
-    <div class="table-search-box">
-        <input type="text" id="tableSearch" onkeyup="filterUsers()" placeholder="🔍 Search User ID...">
-    </div>
-
-    <!-- RESPONSIVE TABLE CONTAINER -->
-    <div class="table-responsive">
-        <table class="modern-table">
-            <thead>
-                <tr>
-                    <th>USER ID</th>
-                    <th class="text-right">BALANCE</th>
-                    <th class="text-right">WIN</th>
-                    <th class="text-right">LOSE</th>
-                    <th class="text-center">ACTION</th>
-                </tr>
-            </thead>
-            <tbody id="userTable">
-                <!-- Rendered by JavaScript -->
-            </tbody>
-        </table>
-    </div>
-</section>
     <!-- PAGE SECTION: SETTINGS -->
     <div id="settings" class="page-section hidden">
         <section class="panel">
@@ -169,6 +169,14 @@
         </div>
     </div>
 
+    <!-- 📷 RECEIPT IMAGE PREVIEW MODAL (បន្ថែមថ្មី៖ សម្រាប់ចុចមើលរូបភាព Receipt ធំ) -->
+    <div id="receiptImageModal" class="modal hidden" onclick="closeImageModal()" style="display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.85); z-index:99999;">
+        <div style="position: relative; max-width: 90%; max-height: 90%; text-align:center;" onclick="event.stopPropagation()">
+            <span onclick="closeImageModal()" style="position: absolute; top: -35px; right: 0; color: #fff; font-size: 28px; cursor: pointer; font-weight: bold;">✕</span>
+            <img id="modalReceiptImg" src="" style="max-width: 100%; max-height: 80vh; border-radius: 10px; border: 2px solid #334155; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+        </div>
+    </div>
+
     <!-- BOTTOM NAV -->
     <nav class="admin-nav">
         <button class="nav-item active" onclick="showSection('dashboard', event)">
@@ -189,6 +197,45 @@
         </button>
     </nav>
 
+</div>
+<!-- 🎮 GAME EDIT / ADD MODAL -->
+<div id="gameModal" class="modal-overlay hidden" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:#0f172a; border:1px solid #334155; border-radius:12px; padding:20px; width:90%; max-width:400px; color:#fff;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h3 id="gameModalTitle" style="margin:0;">🎮 កែសម្រួលហ្គេម</h3>
+            <button onclick="closeGameModal()" style="background:none; border:none; color:#fff; font-size:18px; cursor:pointer;">✕</button>
+        </div>
+
+        <input type="hidden" id="editGameId">
+
+        <label style="font-size:12px; color:#94a3b8; display:block; margin-bottom:4px;">ឈ្មោះហ្គេម (Game Name)</label>
+        <input type="text" id="gameNameInput" placeholder="ឧទាហរណ៍: Lucky Spin" style="width:100%; padding:10px; border-radius:6px; border:1px solid #334155; background:#1e293b; color:#fff; margin-bottom:10px; box-sizing:border-box;">
+
+        <label style="font-size:12px; color:#94a3b8; display:block; margin-bottom:4px;">រូបភាព / Emoji / Image URL</label>
+        <input type="text" id="gameImageInput" placeholder="Link រូបភាព (https://...) ឬ Emoji 🎰" style="width:100%; padding:10px; border-radius:6px; border:1px solid #334155; background:#1e293b; color:#fff; margin-bottom:10px; box-sizing:border-box;">
+
+        <label style="font-size:12px; color:#94a3b8; display:block; margin-bottom:4px;">អត្រាឈ្នះ Win Rate (%)</label>
+        <input type="number" id="gameWinRateInput" placeholder="ឧទាហរណ៍: 95" style="width:100%; padding:10px; border-radius:6px; border:1px solid #334155; background:#1e293b; color:#fff; margin-bottom:10px; box-sizing:border-box;">
+
+        <label style="font-size:12px; color:#94a3b8; display:block; margin-bottom:4px;">ប្រភេទហ្គេម (Category)</label>
+        <select id="gameCategorySelect" style="width:100%; padding:10px; border-radius:6px; border:1px solid #334155; background:#1e293b; color:#fff; margin-bottom:10px; box-sizing:border-box;">
+            <option value="slot">🎰 Slots</option>
+            <option value="fish">🐟 Fish</option>
+            <option value="race">🏎 Race</option>
+            <option value="macau">🎲 Macau</option>
+        </select>
+
+        <label style="font-size:12px; color:#94a3b8; display:block; margin-bottom:4px;">ស្ថានភាព (Status)</label>
+        <select id="gameStatusSelect" style="width:100%; padding:10px; border-radius:6px; border:1px solid #334155; background:#1e293b; color:#fff; margin-bottom:15px; box-sizing:border-box;">
+            <option value="online">Online</option>
+            <option value="offline">Offline</option>
+        </select>
+
+        <div style="display:flex; gap:10px;">
+            <button onclick="closeGameModal()" style="flex:1; padding:10px; background:#334155; border:none; border-radius:6px; color:#fff; cursor:pointer;">បោះបង់</button>
+            <button onclick="saveGameData()" style="flex:1; padding:10px; background:#22c55e; border:none; border-radius:6px; color:#0f172a; font-weight:bold; cursor:pointer;">💾 រក្សាទុក</button>
+        </div>
+    </div>
 </div>
 
 <div id="toast" class="toast"></div>

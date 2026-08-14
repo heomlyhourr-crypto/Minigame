@@ -30,3 +30,4 @@ git add .
 git commit -m "Update full index.html"
 git push origin main
 ls
+git push -f origin master:main

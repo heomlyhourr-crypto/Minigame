@@ -174,9 +174,8 @@ function searchUser() {
     if (!user) {
         result.classList.remove("hidden");
         result.innerHTML = `
-            <div class="empty-state">
-                ❌
-                <p>មិនរកឃើញ User ID: ${id}</p>
+            <div class="empty-state" style="text-align:center; padding: 15px; color:#ef4444;">
+                ❌ <p>មិនរកឃើញ User ID: ${id}</p>
             </div>
         `;
         selectedUser = null;
@@ -189,27 +188,26 @@ function searchUser() {
         <div class="user-result-top">
             <div>
                 <div class="result-id">ID ${user.id}</div>
-                <small>Firebase User</small>
+                <small style="color:#94a3b8;">Firebase User</small>
             </div>
             <div class="result-balance">${money(user.balance)}</div>
         </div>
-        <div class="result-stats">
-            <div class="result-stat">
-                <span>ឈ្នះ</span>
-                <strong>${money(user.win)}</strong>
+        <div class="result-stats" style="display:flex; justify-size:space-between; margin-top:10px; background:#1e293b; padding:10px; border-radius:8px;">
+            <div class="result-stat" style="flex:1; text-align:center;">
+                <span style="font-size:12px; color:#94a3b8;">ឈ្នះ</span><br>
+                <strong style="color:#22c55e;">${money(user.win)}</strong>
             </div>
-            <div class="result-stat">
-                <span>ចាញ់</span>
-                <strong>${money(user.lose)}</strong>
+            <div class="result-stat" style="flex:1; text-align:center;">
+                <span style="font-size:12px; color:#94a3b8;">ចាញ់</span><br>
+                <strong style="color:#ef4444;">${money(user.lose)}</strong>
             </div>
-            <div class="result-stat">
-                <span>សរុប</span>
-                <strong>${money(user.total)}</strong>
+            <div class="result-stat" style="flex:1; text-align:center;">
+                <span style="font-size:12px; color:#94a3b8;">សរុប</span><br>
+                <strong style="color:#38bdf8;">${money(user.total)}</strong>
             </div>
         </div>
     `;
 }
-
 // ==========================================
 // ADD MONEY (បញ្ចូលប្រាក់ FIREBASE)
 // ==========================================
@@ -318,61 +316,7 @@ function removeMoney() {
 }
 
 // ==========================================
-// USER TABLE
-// ==========================================
-function renderUserTable(data = users) {
-    const table = document.getElementById("userTable");
-    if (!table) return;
-
-    table.innerHTML = "";
-
-    data.forEach(function(user) {
-        const row = document.createElement("tr");
-
-        row.innerHTML = `
-            <td><span class="user-id">${user.id}</span></td>
-            <td>${money(user.balance)}</td>
-            <td>${money(user.win)}</td>
-            <td>${money(user.lose)}</td>
-            <td>${money(user.total)}</td>
-            <td>
-                <button class="more-btn" onclick="selectUser('${user.id}')">More</button>
-            </td>
-        `;
-
-        table.appendChild(row);
-    });
-}
-
-// ==========================================
-// SELECT USER
-// ==========================================
-function selectUser(id) {
-    showSectionByCode("dashboard");
-    const input = document.getElementById("userIdInput");
-    if (input) input.value = id;
-
-    searchUser();
-    showToast("បានជ្រើសរើស User " + id);
-}
-
-// ==========================================
-// FILTER USERS
-// ==========================================
-function filterUsers() {
-    const input = document.getElementById("tableSearch");
-    if (!input) return;
-
-    const value = input.value.trim().toLowerCase();
-    const filtered = users.filter(function(user) {
-        return user.id.toLowerCase().includes(value);
-    });
-
-    renderUserTable(filtered);
-}
-
-// ==========================================
-// HISTORY
+// USER TABLE & BADGE
 // ==========================================
 function renderUserTable(data = users) {
     const table = document.getElementById("userTable");
@@ -411,194 +355,348 @@ function renderUserTable(data = users) {
                     ${money(user.lose)}
                 </td>
                 <td class="text-center">
-                    <button class="btn-more-action" onclick="selectUser('${user.id}')">More</button>
+                    <button class="btn-more-action" style="padding:4px 12px; background:#3b82f6; border:none; border-radius:4px; color:#fff; cursor:pointer;" onclick="selectUser('${user.id}')">More</button>
                 </td>
             </tr>
         `;
     }).join("");
 }
+
 // ==========================================
-// REQUESTS (LOCAL STORAGE WALLET REQUESTS)
+// SELECT USER
+// ==========================================
+function selectUser(id) {
+    showSectionByCode("dashboard");
+    const input = document.getElementById("userIdInput");
+    if (input) input.value = id;
+
+    searchUser();
+    showToast("បានជ្រើសរើស User " + id);
+}
+
+// ==========================================
+// FILTER USERS
+// ==========================================
+function filterUsers() {
+    const input = document.getElementById("tableSearch");
+    if (!input) return;
+
+    const value = input.value.trim().toLowerCase();
+    const filtered = users.filter(function(user) {
+        return user.id.toLowerCase().includes(value);
+    });
+
+    renderUserTable(filtered);
+}
+// ==========================================
+// ទាញយក និងបង្ហាញ Realtime Requests + ព័ត៌មានធនាគារ (ADMIN)
 // ==========================================
 function loadRequests() {
     const container = document.getElementById("requests");
-    if (!container) return;
+    if (!container || !db) return;
 
-    const requests = JSON.parse(localStorage.getItem("walletRequests") || "[]");
+    db.ref("requests").on("value", function(snapshot) {
+        const data = snapshot.val();
 
-    if (requests.length === 0) {
-        container.innerHTML = `
-            <div style="text-align:center; padding:20px; color:var(--muted, #8ea2b7); font-size:11px;">
-                No Pending Requests
-            </div>
-        `;
-        return;
-    }
+        if (!data) {
+            container.innerHTML = `
+                <div style="text-align:center; padding:20px; color:#8ea2b7; font-size:11px;">
+                    No Pending Requests
+                </div>
+            `;
+            return;
+        }
 
-    const pending = requests.filter(function(item) {
-        return item.status === "pending";
-    });
+        const pendingList = [];
+        Object.keys(data).forEach(function(key) {
+            const req = data[key] || {};
+            if (req.status === "pending") {
+                pendingList.push(req);
+            }
+        });
 
-    if (pending.length === 0) {
-        container.innerHTML = `
-            <div style="text-align:center; padding:20px; color:var(--muted, #8ea2b7); font-size:11px;">
-                No Pending Requests
-            </div>
-        `;
-        return;
-    }
+        if (pendingList.length === 0) {
+            container.innerHTML = `
+                <div style="text-align:center; padding:20px; color:#8ea2b7; font-size:11px;">
+                    No Pending Requests
+                </div>
+            `;
+            return;
+        }
 
-    container.innerHTML = pending.slice(0, 10).map(function(item) {
-        return `
-        <div class="request" id="${item.id}">
-            <div class="request-icon">
-                ${item.type === "deposit" ? "💰" : "💸"}
-            </div>
+        container.innerHTML = pendingList.slice(0, 10).map(function(item) {
+            const receiptHtml = item.receipt 
+                ? `<img src="${item.receipt}" onclick="viewReceiptImage('${item.receipt}')" style="width:38px; height:38px; border-radius:6px; object-fit:cover; cursor:pointer; margin-right:8px; border:1px solid #334155;" title="Click to view receipt">` 
+                : '';
 
-            <div class="request-info">
-                <strong>User #82931</strong>
-                <small>${item.id}</small>
-                <small>${item.date || ''}</small>
-            </div>
+            const typeLabel = item.type === "deposit" 
+                ? `<span style="color:#22c55e; font-size:11px; font-weight:bold;">💰 ដាក់ប្រាក់</span>`
+                : `<span style="color:#ef4444; font-size:11px; font-weight:bold;">💸 ដកប្រាក់</span>`;
 
-            <div class="request-amount">
-                <strong>${moneyUSD(item.amount)}</strong>
+            // 🎯 បន្ថែមការបង្ហាញព័ត៌មានកុងធនាគារ (Bank Details) ប្រសិនបើជា Request ដកប្រាក់
+            const bankInfoHtml = (item.type === "withdraw" && item.bankDetails) 
+                ? `<div style="color:#38bdf8; font-size:11px; font-weight:600; margin-top:2px; background:#1e293b; padding:2px 6px; border-radius:4px; display:inline-block;">🏦 ${item.bankDetails}</div>` 
+                : '';
 
-                <div class="request-actions">
-                    <button class="approve" onclick="approveRequest('${item.id}')">✓</button>
-                    <button class="reject" onclick="rejectRequest('${item.id}')">✕</button>
+            return `
+            <div class="request" id="${item.id}" style="display:flex; align-items:center; justify-content:space-between; padding:10px; background:#0f172a; border-radius:8px; margin-bottom:8px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    ${receiptHtml}
+                    <div class="request-info">
+                        <strong style="display:block; font-size:13px; color:#fff;">User #${item.userId || 'User'}</strong>
+                        <div>${typeLabel}</div>
+                        ${bankInfoHtml}
+                        <small style="color:#64748b; font-size:10px; display:block; margin-top:3px;">${item.createdAt || ''}</small>
+                    </div>
+                </div>
+
+                <div class="request-amount" style="text-align:right;">
+                    <strong style="display:block; font-size:14px; color:#38bdf8;">${moneyUSD(item.amount)}</strong>
+
+                    <div class="request-actions" style="margin-top:6px; display:flex; gap:4px; justify-content:flex-end;">
+                        <button class="approve" style="background:#22c55e; border:none; color:#fff; border-radius:4px; padding:3px 10px; cursor:pointer; font-size:12px;" onclick="approveRequest('${item.id}', '${item.userId}', '${item.type}', ${item.amount})">✓</button>
+                        <button class="reject" style="background:#ef4444; border:none; color:#fff; border-radius:4px; padding:3px 10px; cursor:pointer; font-size:12px;" onclick="rejectRequest('${item.id}', '${item.userId}', '${item.type}', ${item.amount})">✕</button>
+                    </div>
                 </div>
             </div>
-        </div>
-        `;
-    }).join("");
-}
-
-function approveRequest(id) {
-    const requests = JSON.parse(localStorage.getItem("walletRequests") || "[]");
-    const request = requests.find(function(item) {
-        return item.id === id;
+            `;
+        }).join("");
+    }, function(error) {
+        console.error("Firebase loadRequests Error:", error);
     });
-
-    if (!request) return;
-
-    request.status = "approved";
-
-    let balance = Number(localStorage.getItem("balance")) || 1250;
-    
-    if (request.type === "deposit") {
-        balance += Number(request.amount);
-    } else if (request.type === "withdraw") {
-        balance -= Number(request.amount);
-    }
-    
-    localStorage.setItem("balance", balance);
-    localStorage.setItem("walletRequests", JSON.stringify(requests));
-    showToast("✓ Request Approved");
-    loadRequests();
-}
-
-function rejectRequest(id) {
-    const requests = JSON.parse(localStorage.getItem("walletRequests") || "[]");
-    const request = requests.find(function(item) {
-        return item.id === id;
-    });
-
-    if (!request) return;
-
-    request.status = "rejected";
-
-    localStorage.setItem("walletRequests", JSON.stringify(requests));
-    showToast("Request Rejected");
-    loadRequests();
 }
 
 // ==========================================
-// GAME DATABASE
+// ADMIN APPROVE (យល់ព្រម)
 // ==========================================
-function initGames() {
-    games = JSON.parse(localStorage.getItem("games") || "[]");
+function approveRequest(id, userId, type, amount) {
+    if (!db) return;
 
-    if (games.length === 0) {
-        games = [
-            { name: "Lucky Spin", logo: "🎰", winRate: 95, status: "Online" },
-            { name: "Ocean King", logo: "🐟", winRate: 90, status: "Online" },
-            { name: "Speed Race", logo: "🏎️", winRate: 88, status: "Online" }
-        ];
-        saveGames();
+    const numAmount = Number(amount);
+
+    if (type === "deposit") {
+        // ដាក់ប្រាក់: បូកប្រាក់ (+) ចូលក្នុង Firebase របស់ User
+        db.ref("users/" + userId + "/balance").transaction(function(currentBalance) {
+            return (Number(currentBalance) || 0) + numAmount;
+        }, function(error, committed) {
+            if (committed) {
+                db.ref("requests/" + id + "/status").set("approved");
+                showToast("✓ បានអនុម័តការដាក់ប្រាក់ " + moneyUSD(numAmount));
+            }
+        });
+    } else if (type === "withdraw") {
+        // ដកប្រាក់: លុយត្រូវបានកាត់ចេញពី User រួចហើយ! គ្រាន់តែប្តូរ Status
+        db.ref("requests/" + id + "/status").set("approved")
+        .then(function() {
+            showToast("✓ បានអនុម័តការដកប្រាក់ " + moneyUSD(numAmount));
+        })
+        .catch(function(err) {
+            console.error(err);
+            showToast("Update Request បរាជ័យ");
+        });
     }
-    loadGames();
 }
 
-function loadGames() {
-    const list = document.getElementById("gameList");
-    if (!list) return;
+// ==========================================
+// ADMIN REJECT (បដិសេធ / បរាជ័យ - REFUND)
+// ==========================================
+function rejectRequest(id, userId, type, amount) {
+    if (!db) return;
 
-    list.innerHTML = games.map(function(game) {
-        return `
-        <div class="game-admin">
-            <div class="game-logo">${game.logo}</div>
+    const numAmount = Number(amount);
 
-            <div class="game-data">
-                <strong>${game.name}</strong>
-                <small>Win Rate: ${game.winRate}%</small>
+    if (type === "withdraw") {
+        // ដកប្រាក់បរាជ័យ: វេរប្រាក់ (Refund +) ត្រឡប់ទៅ Wallet User វិញ!
+        db.ref("users/" + userId + "/balance").transaction(function(currentBalance) {
+            return (Number(currentBalance) || 0) + numAmount;
+        }, function(error, committed) {
+            if (committed) {
+                db.ref("requests/" + id + "/status").set("rejected");
+                showToast("✕ បានបដិសេធ! ប្រាក់ " + moneyUSD(numAmount) + " ត្រូវវេរត្រឡប់ទៅ User វិញ");
+            }
+        });
+    } else if (type === "deposit") {
+        // ដាក់ប្រាក់បរាជ័យ: គ្រាន់តែប្តូរ Status ជា rejected
+        db.ref("requests/" + id + "/status").set("rejected")
+        .then(function() {
+            showToast("✕ បានបដិសេធសំណើដាក់ប្រាក់");
+        })
+        .catch(function(err) {
+            console.error(err);
+            showToast("Update Request បរាជ័យ");
+        });
+    }
+}
+// ==========================================
+// 📷 RECEIPT IMAGE PREVIEW MODAL (បន្ថែមថ្មី)
+// ==========================================
+function viewReceiptImage(imgUrl) {
+    const modal = document.getElementById("receiptImageModal");
+    const modalImg = document.getElementById("modalReceiptImg");
+    
+    if (modal && modalImg) {
+        modalImg.src = imgUrl;
+        modal.style.display = "flex";
+        modal.classList.remove("hidden");
+    }
+}
+
+function closeImageModal() {
+    const modal = document.getElementById("receiptImageModal");
+    if (modal) {
+        modal.style.display = "none";
+        modal.classList.add("hidden");
+    }
+}
+
+// ==========================================
+// ADMIN GAME MANAGEMENT (LOAD, ADD, EDIT)
+// ==========================================
+
+// 1. ទាញយកបញ្ជីហ្គេមបង្ហាញលើ Admin Dashboard
+function loadAdminGames() {
+    const container = document.getElementById("adminGameList") || document.querySelector(".game-settings-list");
+    if (!container || !db) return;
+
+    db.ref("games").on("value", function(snapshot) {
+        const games = snapshot.val();
+        if (!games) {
+            container.innerHTML = `<p style="color:#64748b; text-align:center;">មិនទាន់មានហ្គេមនៅឡើយទេ</p>`;
+            return;
+        }
+
+        let html = "";
+        Object.keys(games).forEach(function(key) {
+            const game = games[key];
+            
+            // ពិនិត្យមើលថាតើ game.image ជា Link URL ឬជា Emoji
+            const isUrl = game.image && (game.image.startsWith("http") || game.image.startsWith("data:image"));
+            const imageDisplay = isUrl 
+                ? `<img src="${game.image}" style="width:100%; height:100%; object-fit:cover; border-radius:8px;">`
+                : `<span style="font-size:24px;">${game.image || '🎮'}</span>`;
+
+            html += `
+            <div class="game-item" style="display:flex; align-items:center; justify-content:space-between; padding:12px; background:#0f172a; border-radius:10px; margin-bottom:8px; border:1px solid #1e293b;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div style="width:45px; height:45px; background:#1e293b; border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                        ${imageDisplay}
+                    </div>
+                    <div>
+                        <strong style="color:#fff; font-size:14px; display:block;">${game.name}</strong>
+                        <small style="color:#64748b; font-size:11px;">Win Rate: ${game.winRate || 0}% · <span style="color:#38bdf8;">${game.category || 'slot'}</span></small>
+                    </div>
+                </div>
+
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="color:${game.status === 'online' ? '#22c55e' : '#ef4444'}; font-size:12px; font-weight:bold;">${game.status || 'online'}</span>
+                    <button onclick="openGameModal('${key}')" style="background:#3b82f6; border:none; color:#fff; border-radius:6px; padding:5px 10px; font-size:12px; cursor:pointer;">✏️ កែ</button>
+                </div>
             </div>
+            `;
+        });
 
-            <div class="game-status">${game.status}</div>
-        </div>
-        `;
-    }).join("");
+        container.innerHTML = html;
+    });
 }
 
-function openGameForm() {
-    const form = document.getElementById("gameForm");
-    if (form) form.classList.add("show");
+// 2. បើក Modal កែសម្រួល ឬ បន្ថែមហ្គេម
+function openGameModal(gameId) {
+    const modal = document.getElementById("gameModal");
+    if (!modal) return;
+
+    if (gameId) {
+        // Mode កែសម្រួល (Edit)
+        db.ref("games/" + gameId).once("value").then(function(snapshot) {
+            const game = snapshot.val();
+            if (game) {
+                document.getElementById("editGameId").value = gameId;
+                document.getElementById("gameNameInput").value = game.name || "";
+                document.getElementById("gameImageInput").value = game.image || "";
+                document.getElementById("gameWinRateInput").value = game.winRate || 90;
+                document.getElementById("gameCategorySelect").value = game.category || "slot";
+                document.getElementById("gameStatusSelect").value = game.status || "online";
+                document.getElementById("gameModalTitle").innerText = "✏️ កែសម្រួលហ្គេម";
+            }
+        });
+    } else {
+        // Mode បន្ថែមថ្មី (Add)
+        document.getElementById("editGameId").value = "";
+        document.getElementById("gameNameInput").value = "";
+        document.getElementById("gameImageInput").value = "";
+        document.getElementById("gameWinRateInput").value = "90";
+        document.getElementById("gameModalTitle").innerText = "➕ បន្ថែមហ្គេមថ្មី";
+    }
+
+    modal.style.display = "flex";
+    modal.classList.remove("hidden");
 }
 
-function closeGameForm() {
-    const form = document.getElementById("gameForm");
-    if (form) form.classList.remove("show");
+function closeGameModal() {
+    const modal = document.getElementById("gameModal");
+    if (modal) {
+        modal.style.display = "none";
+        modal.classList.add("hidden");
+    }
 }
 
-function addGame() {
-    const nameEl = document.getElementById("gameName");
-    const logoEl = document.getElementById("gameLogo");
-    const imageEl = document.getElementById("gameImage");
-    const linkEl = document.getElementById("gameLink");
-    const winRateEl = document.getElementById("winRate");
+// 3. រក្សាទុកទិន្នន័យ (Save to Firebase)
+function saveGameData() {
+    const gameId = document.getElementById("editGameId").value || "game_" + Date.now();
+    const name = document.getElementById("gameNameInput").value.trim();
+    const image = document.getElementById("gameImageInput").value.trim();
+    const winRate = Number(document.getElementById("gameWinRateInput").value) || 0;
+    const category = document.getElementById("gameCategorySelect").value;
+    const status = document.getElementById("gameStatusSelect").value;
 
-    if (!nameEl) return;
-    const name = nameEl.value.trim();
+    if (!name) return alert("សូមបញ្ចូលឈ្មោះហ្គេម!");
 
-    if (!name) {
-        showToast("Please enter Game Name");
+    db.ref("games/" + gameId).set({
+        id: gameId,
+        name: name,
+        image: image || "🎮",
+        winRate: winRate,
+        category: category,
+        status: status
+    }).then(function() {
+        closeGameModal();
+        if (typeof showToast === "function") showToast("✓ រក្សាទុកហ្គេមជោគជ័យ!");
+    }).catch(function(err) {
+        console.error(err);
+        alert("រក្សាទុកបរាជ័យ!");
+    });
+}
+
+// ហៅ loadAdminGames នៅពេល Admin ទំព័រ Load រួច
+document.addEventListener("DOMContentLoaded", function() {
+    loadAdminGames();
+});
+// ==========================================
+// 🛠️ ដោះស្រាយ Error: openGameForm is not defined
+// ==========================================
+function openGameForm(gameId = null) {
+    // ប្រសិនបើមាន openGameModal ស្រាប់ ឱ្យវាហៅប្រើ openGameModal
+    if (typeof openGameModal === "function") {
+        openGameModal(gameId);
         return;
     }
 
-    games.push({
-        name: name,
-        logo: logoEl ? logoEl.value.trim() || "🎮" : "🎮",
-        image: imageEl ? imageEl.value.trim() : "",
-        link: linkEl ? linkEl.value.trim() : "",
-        winRate: winRateEl ? Number(winRateEl.value) || 0 : 0,
-        status: "Online"
-    });
-
-    saveGames();
-    loadGames();
-    closeGameForm();
-
-    nameEl.value = "";
-    if (logoEl) logoEl.value = "";
-    if (imageEl) imageEl.value = "";
-    if (linkEl) linkEl.value = "";
-    if (winRateEl) winRateEl.value = "";
-
-    showToast("✓ Game Added");
+    // ប្រសិនបើគ្មានទេ វានឹងបើក Modal ដោយផ្ទាល់
+    const modal = document.getElementById("gameModal") || document.getElementById("gameFormModal");
+    if (modal) {
+        modal.style.display = "flex";
+        modal.classList.remove("hidden");
+    } else {
+        alert("រកមិនឃើញ Modal សម្រាប់បញ្ចូលហ្គេមទេ! សូមពិនិត្យមើល ID ក្នុង HTML");
+    }
 }
 
-function saveGames() {
-    localStorage.setItem("games", JSON.stringify(games));
+// មុខងារបិទ Form/Modal
+function closeGameForm() {
+    const modal = document.getElementById("gameModal") || document.getElementById("gameFormModal");
+    if (modal) {
+        modal.style.display = "none";
+        modal.classList.add("hidden");
+    }
 }
 
 // ==========================================
@@ -614,7 +712,7 @@ function showSection(sectionId, evt) {
         targetSection.classList.remove("hidden");
     }
 
-    document.querySelectorAll(".side-item").forEach(function(button) {
+    document.querySelectorAll(".nav-item, .side-item").forEach(function(button) {
         button.classList.remove("active");
     });
 
@@ -654,6 +752,14 @@ function toggleSidebar() {
 document.addEventListener("DOMContentLoaded", function() {
     updateDate();
     loadRequests();
-    initGames();
+    loadAdminGames();
     loadUsers();
+
+    // បិទ Sidebar ពេលចុច Overlay
+    const ov = document.getElementById("overlay");
+    if (ov) {
+        ov.addEventListener("click", function() {
+            toggleSidebar();
+        });
+    }
 });

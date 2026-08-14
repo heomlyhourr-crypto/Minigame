@@ -5,15 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GameHub</title>
   
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
-
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&display=swap"
-          rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -61,10 +55,12 @@
             </div>
 
             <div class="wallet-buttons">
-                <button class="deposit-btn" onclick="goWallet('deposit')">
+                <!-- 🎯 បើក Modal ដាក់ប្រាក់ដែលភ្ជាប់ជាមួយការបោះរូបភាព -->
+                <button class="deposit-btn" onclick="openModal('depositModal')">
                     ＋ ដាក់ប្រាក់
                 </button>
-                <button class="withdraw-btn" onclick="goWallet('withdraw')">
+                <!-- 🎯 បើក Modal ដកប្រាក់ (កែសម្រួលដើម្បីបើក withdrawModal) -->
+                <button class="withdraw-btn" onclick="openModal('withdrawModal')">
                     ↗ ដកប្រាក់
                 </button>
             </div>
@@ -76,7 +72,8 @@
                 <span>🎁</span>
                 <small>Gift</small>
             </button>
-            <button onclick="showMessage('History')">
+            <!-- 🎯 ភ្ជាប់ History Modal -->
+            <button onclick="openModal('historyModal'); loadHistory();">
                 <span>📜</span>
                 <small>History</small>
             </button>
@@ -213,7 +210,6 @@
     </main>
 
     <!-- ================= BOTTOM NAV ================= -->
-  
     <nav class="bottom-nav">
         <button class="nav active" onclick="showMessage('Home')">
             <span>⌂</span>
@@ -229,7 +225,8 @@
             🎮
         </button>
 
-        <button class="nav" onclick="showMessage('History')">
+        <!-- 🎯 ភ្ជាប់ History Modal ត្រង់ Bottom Nav -->
+        <button class="nav" onclick="openModal('historyModal'); loadHistory();">
             <span>📜</span>
             <small>History</small>
         </button>
@@ -251,20 +248,64 @@
                 <button onclick="closeMenu()">✕</button>
             </div>
 
-            <button onclick="showMessage('Profile')">👤 Profile</button>
-            <button onclick="goWallet('deposit')">💰 Wallet</button>
-            
-            <!-- 🎯 កែសម្រួលត្រង់នេះ៖ ឱ្យបិទ Menu និង បើក History Modal -->
-          
-   <button onclick="openModal('historyModal'); loadHistory();">
-        📜<br><small>History</small>
-    </button>
-    
-    <button onclick="openModal('vipModal')">👑<br><small>VIP</small></button>
-    <button onclick="openSupport()">💬<br><small>Support</small></button>
+            <!-- 🎯 កែសម្រួលបញ្ជី Menu ឱ្យមានរបៀប និងបិទ Menu ពេលចុច -->
+            <button onclick="closeMenu(); showMessage('Profile')">👤 Profile</button>
+            <button onclick="closeMenu(); openModal('depositModal')">💰 Wallet</button>
+            <button onclick="closeMenu(); openModal('historyModal'); loadHistory();">📜 History</button>
+            <button onclick="closeMenu(); showMessage('Support')">💬 Support</button>
+            <button onclick="closeMenu(); showMessage('Settings')">⚙️ Settings</button>
         </div>
     </div>
 
+</div>
+
+<!-- 💰 DEPOSIT MODAL (សម្រាប់បញ្ចូលទឹកប្រាក់ និងរូបភាព Receipt) -->
+<div id="depositModal" class="modal-overlay hidden">
+    <div class="history-modal-box">
+        <div class="history-header">
+            <h3>💰 ដាក់ប្រាក់ (Deposit)</h3>
+            <button class="btn-close-modal" onclick="closeModal('depositModal')">✕</button>
+        </div>
+
+        <div style="padding: 15px 0;">
+            <label style="font-size: 13px; color: #94a3b8; margin-bottom: 5px; display: block;">ចំនួនទឹកប្រាក់ ($)</label>
+            <input type="number" id="depositAmount" placeholder="បញ្ចូលចំនួនទឹកប្រាក់..." style="padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #fff; width: 100%; box-sizing: border-box; margin-bottom: 12px;">
+
+            <label style="font-size: 13px; color: #94a3b8; margin-bottom: 5px; display: block;">📷 ផ្ទុកឡើងវិក្កយបត្រ (Receipt Image)</label>
+            <input type="file" id="receiptFileInput" accept="image/*" onchange="previewDepositImage(event)" style="font-size: 12px; color: #94a3b8; margin-bottom: 10px; width: 100%;">
+
+            <!-- រូបភាពមើលជាមុន (Preview) -->
+            <img id="receiptPreview" class="receipt-preview-img hidden" src="" alt="Receipt Preview" style="max-width: 100%; max-height: 180px; object-fit: contain; border-radius: 8px; border: 1px solid #334155; display: none; margin-bottom: 10px;">
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+            <button onclick="closeModal('depositModal')" style="flex:1; padding:12px; background:#334155; color:#fff; border:none; border-radius:8px; cursor:pointer;">បោះបង់</button>
+            <button onclick="submitDepositWithImage()" style="flex:1; padding:12px; background:#22c55e; color:#0b1329; font-weight:bold; border:none; border-radius:8px; cursor:pointer;">📤 ផ្ញើស្នើ</button>
+        </div>
+    </div>
+</div>
+
+<!-- 💸 WITHDRAW MODAL (បន្ថែមថ្មី៖ សម្រាប់ស្នើដកប្រាក់ និងបញ្ចូលព័ត៌មានធនាគារ) -->
+<div id="withdrawModal" class="modal-overlay hidden">
+    <div class="history-modal-box">
+        <div class="history-header">
+            <h3>💸 ដកប្រាក់ (Withdraw)</h3>
+            <button class="btn-close-modal" onclick="closeModal('withdrawModal')">✕</button>
+        </div>
+
+        <div style="padding: 15px 0;">
+            <label style="font-size: 13px; color: #94a3b8; margin-bottom: 5px; display: block;">ចំនួនទឹកប្រាក់ដក ($)</label>
+            <input type="number" id="withdrawAmount" placeholder="បញ្ចូលចំនួនទឹកប្រាក់..." style="padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #fff; width: 100%; box-sizing: border-box; margin-bottom: 12px;">
+
+            <label style="font-size: 13px; color: #94a3b8; margin-bottom: 5px; display: block;">🏦 ព័ត៌មានកុងធនាគារ (Bank Name & Account Number)</label>
+            <input type="text" id="withdrawBankDetails" placeholder="ឧទាហរណ៍៖ ABA 000 123 456 (Name)" style="padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #fff; width: 100%; box-sizing: border-box; margin-bottom: 12px;">
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+            <button onclick="closeModal('withdrawModal')" style="flex:1; padding:12px; background:#334155; color:#fff; border:none; border-radius:8px; cursor:pointer;">បោះបង់</button>
+            <button onclick="submitWithdrawFromModal()" style="flex:1; padding:12px; background:#ef4444; color:#fff; font-weight:bold; border:none; border-radius:8px; cursor:pointer;">💸 ដកប្រាក់</button>
+        </div>
+    </div>
 </div>
 
 <!-- 📜 HISTORY MODAL POPUP -->
