@@ -1,0 +1,92 @@
+{
+    "games": [
+        {
+            "id": "classic-slots",
+            "name": "Classic Slots",
+            "category": "slots",
+            "description": "Classic 3 Reel Slots",
+            "icon": "🎰",
+            "tag": "HOT",
+            "status": "available",
+            "rating": 4.9,
+            "plays": 12500
+        },
+        {
+            "id": "fruit-slots",
+            "name": "Fruit Slots",
+            "category": "slots",
+            "description": "Fruit themed slot game",
+            "icon": "🍒",
+            "tag": "NEW",
+            "status": "available",
+            "rating": 4.8,
+            "plays": 8900
+        },
+        {
+            "id": "diamond-slots",
+            "name": "Diamond Slots",
+            "category": "slots",
+            "description": "Diamond themed slots",
+            "icon": "💎",
+            "tag": "HOT",
+            "status": "available",
+            "rating": 4.9,
+            "plays": 15600
+        },
+        {
+            "id": "gold-slots",
+            "name": "Golden Slots",
+            "category": "slots",
+            "description": "Golden themed slots",
+            "icon": "👑",
+            "tag": "",
+            "status": "available",
+            "rating": 4.7,
+            "plays": 7300
+        },
+        {
+            "id": "scratch-gold",
+            "name": "Golden Scratch",
+            "category": "scratch",
+            "description": "Scratch and reveal",
+            "icon": "🎫",
+            "tag": "NEW",
+            "status": "coming-soon",
+            "rating": 4.8,
+            "plays": 0
+        },
+        {
+            "id": "lucky-wheel",
+            "name": "Lucky Wheel",
+            "category": "wheel",
+            "description": "Spin the lucky wheel",
+            "icon": "🎡",
+            "tag": "HOT",
+            "status": "coming-soon",
+            "rating": 4.8,
+            "plays": 0
+        },
+        {
+            "id": "lucky-dice",
+            "name": "Lucky Dice",
+            "category": "dice",
+            "description": "Roll the lucky dice",
+            "icon": "🎲",
+            "tag": "",
+            "status": "coming-soon",
+            "rating": 4.7,
+            "plays": 0
+        },
+        {
+            "id": "classic-cards",
+            "name": "Classic Cards",
+            "category": "cards",
+            "description": "Classic card game",
+            "icon": "🃏",
+            "tag": "",
+            "status": "coming-soon",
+            "rating": 4.6,
+            "plays": 0
+        }
+    ]
+}

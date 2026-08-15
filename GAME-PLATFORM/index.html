@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="km">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
+
+    <meta
+        name="theme-color"
+        content="#080b16"
+    >
+
+    <meta
+        name="description"
+        content="Game Platform"
+    >
+
+    <title>Game Platform</title>
+
+
+    <!-- ================================
+         CSS STYLESHEETS
+    ================================= -->
+
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <!-- CSS Components -->
+    <link rel="stylesheet" href="css/components/header.css">
+    <link rel="stylesheet" href="css/components/navigation.css">
+    <link rel="stylesheet" href="css/components/buttons.css">
+    <link rel="stylesheet" href="css/components/cards.css">
+    <link rel="stylesheet" href="css/components/game-catalog.css">
+    <link rel="stylesheet" href="css/components/pages.css">
+
+  <script>
+  window.onerror = function(message, source, lineno, colno, error) {
+    alert("📍 រកឃើញ Error ក្នុង៖\nFile: " + source + "\nLine: " + lineno + "\nError: " + message);
+    return false;
+  };
+</script>
+
+</head>
+
+
+<body>
+
+<div id="app">
+
+
+    <!-- =================================
+         HEADER
+    ================================== -->
+
+    <header class="app-header">
+
+        <div class="header-left">
+
+            <button
+                class="icon-button"
+                id="menuButton"
+                aria-label="Menu"
+            >
+                ☰
+            </button>
+
+
+            <div class="brand">
+
+                <div class="brand-logo">
+                    🎮
+                </div>
+
+                <div class="brand-info">
+
+                    <strong>
+                        GAME
+                    </strong>
+
+                    <span>
+                        PLATFORM
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-right">
+
+            <button
+                class="icon-button notification-button"
+                id="notificationButton"
+            >
+
+                🔔
+
+                <span
+                    class="notification-badge"
+                    id="notificationBadge"
+                >
+                    3
+                </span>
+
+            </button>
+
+
+            <button
+                class="profile-avatar"
+                id="profileButton"
+            >
+                👤
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =================================
+         MAIN CONTENT CONTAINER
+    ================================== -->
+
+    <main id="mainContent">
+
+        <!-- =====================================
+             HOME PAGE
+        ===================================== -->
+
+        <section
+            data-page-view="home"
+            id="homePage"
+        >
+
+            <!-- WELCOME -->
+            <section class="welcome-section">
+
+                <div>
+
+                    <span class="welcome-label">
+                        សូមស្វាគមន៍ 👋
+                    </span>
+
+                    <h1>
+                        ត្រៀមលេងហ្គេម?
+                    </h1>
+
+                    <p>
+                        ជ្រើសរើសហ្គេមដែលអ្នកចូលចិត្ត
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- WALLET CARD -->
+            <section class="wallet-card">
+
+                <div class="wallet-background-circle"></div>
+
+
+                <div class="wallet-header">
+
+                    <div>
+
+                        <span class="wallet-title">
+                            សមតុល្យរបស់អ្នក
+                        </span>
+
+                        <div class="balance-row">
+
+                            <strong id="balance">
+                                10,000
+                            </strong>
+
+                            <span>
+                                COINS
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="wallet-symbol">
+                        💰
+                    </div>
+
+                </div>
+
+
+                <div class="wallet-divider"></div>
+
+
+                <div class="wallet-actions">
+
+                    <button
+                        class="wallet-button"
+                        id="depositButton"
+                    >
+
+                        <span class="wallet-button-icon">
+                            ＋
+                        </span>
+
+                        <span>
+                            បន្ថែម
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        class="wallet-button"
+                        id="walletButton"
+                    >
+
+                        <span class="wallet-button-icon">
+                            👛
+                        </span>
+
+                        <span>
+                            Wallet
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        class="wallet-button"
+                        id="historyButton"
+                    >
+
+                        <span class="wallet-button-icon">
+                            📜
+                        </span>
+
+                        <span>
+                            ប្រវត្តិ
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- QUICK ACTIONS -->
+            <section class="quick-section">
+
+                <div class="section-heading">
+
+                    <h2>
+                        ចូលលេងភ្លាមៗ
+                    </h2>
+
+                </div>
+
+
+                <div class="quick-grid">
+
+                    <button
+                        class="quick-card"
+                        data-game="slots"
+                    >
+
+                        <div class="quick-icon slots-icon">
+                            🎰
+                        </div>
+
+                        <div class="quick-info">
+
+                            <strong>
+                                Slots
+                            </strong>
+
+                            <span>
+                                Spin & Win
+                            </span>
+
+                        </div>
+
+                        <span class="quick-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        class="quick-card"
+                        data-game="scratch"
+                    >
+
+                        <div class="quick-icon scratch-icon">
+                            🎫
+                        </div>
+
+                        <div class="quick-info">
+
+                            <strong>
+                                Scratch
+                            </strong>
+
+                            <span>
+                                Scratch Card
+                            </span>
+
+                        </div>
+
+                        <span class="quick-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </section>
+
+            <!-- POPULAR GAMES -->
+            <section class="games-section">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="section-small">
+                            FEATURED
+                        </span>
+
+                        <h2>
+                            🎮 ហ្គេមពេញនិយម
+                        </h2>
+
+                    </div>
+
+                    <button
+                        id="viewAllGames"
+                        data-page="games"
+                    >
+                        View All Games
+                    </button>
+
+                </div>
+
+
+                <div class="game-grid">
+
+                    <!-- GAME 1 -->
+                    <article
+                        class="game-card"
+                        data-game="classic"
+                    >
+
+                        <div class="game-image game-classic">
+
+                            <span
+                                class="explore-card"
+                                data-page="games"
+                                data-game-category="slots"
+                            >
+                                🎰
+                            </span>
+
+                            <span class="game-tag">
+                                HOT
+                            </span>
+
+                        </div>
+
+
+                        <div class="game-card-content">
+
+                            <h3>
+                                Classic Slots
+                            </h3>
+
+                            <p>
+                                Classic
+                            </p>
+
+                            <button class="play-button">
+                                លេង
+                                <span>▶</span>
+                            </button>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- GAME 2 -->
+                    <article
+                        class="game-card"
+                        data-game="fruit"
+                    >
+
+                        <div class="game-image game-fruit">
+
+                            <span class="game-emoji">
+                                🍒
+                            </span>
+
+                            <span class="game-tag new">
+                                NEW
+                            </span>
+
+                        </div>
+
+
+                        <div class="game-card-content">
+
+                            <h3>
+                                Fruit Slots
+                            </h3>
+
+                            <p>
+                                Slots
+                            </p>
+
+                            <button class="play-button">
+                                លេង
+                                <span>▶</span>
+                            </button>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- GAME 3 -->
+                    <article
+                        class="game-card"
+                        data-game="wheel"
+                    >
+
+                        <div class="game-image game-wheel">
+
+                            <span class="game-emoji">
+                                🎡
+                            </span>
+
+                        </div>
+
+
+                        <div class="game-card-content">
+
+                            <h3>
+                                Lucky Wheel
+                            </h3>
+
+                            <p>
+                                Wheel
+                            </p>
+
+                            <button class="play-button">
+                                លេង
+                                <span>▶</span>
+                            </button>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- GAME 4 -->
+                    <article
+                        class="game-card"
+                        data-game="dice"
+                    >
+
+                        <div class="game-image game-dice">
+
+                            <span class="game-emoji">
+                                🎲
+                            </span>
+
+                        </div>
+
+
+                        <div class="game-card-content">
+
+                            <h3>
+                                Lucky Dice
+                            </h3>
+
+                            <p>
+                                Dice
+                            </p>
+
+                            <button class="play-button">
+                                លេង
+                                <span>▶</span>
+                            </button>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+        <!-- =====================================
+             GAMES PAGE (CATALOG)
+        ===================================== -->
+
+        <section
+            data-page-view="games"
+            id="gamesPage"
+            class="catalog-page"
+            style="display:none;"
+        >
+
+            <div class="main-container">
+
+                <div class="catalog-header">
+
+                    <h1>
+                        🎮 Games
+                    </h1>
+
+                    <p>
+                        ជ្រើសរើសហ្គេមដែលអ្នកចង់លេង
+                    </p>
+
+                </div>
+
+
+                <!-- SEARCH -->
+                <div class="game-search">
+
+                    <span class="search-icon">
+                        🔍
+                    </span>
+
+                    <input
+                        type="search"
+                        id="gameSearch"
+                        placeholder="ស្វែងរកហ្គេម..."
+                        autocomplete="off"
+                        aria-label="ស្វែងរកហ្គេម"
+                    >
+
+                </div>
+
+
+                <!-- FILTER -->
+                <div class="category-filter" role="tablist" aria-label="Game Categories">
+
+                    <button
+                        class="filter-button active"
+                        data-category="all"
+                    >
+                        🎮 ទាំងអស់
+                    </button>
+
+                    <button
+                        class="filter-button"
+                        data-category="slots"
+                    >
+                        🎰 Slots
+                    </button>
+
+                    <button
+                        class="filter-button"
+                        data-category="scratch"
+                    >
+                        🎫 Scratch
+                    </button>
+
+                    <button
+                        class="filter-button"
+                        data-category="wheel"
+                    >
+                        🎡 Wheel
+                    </button>
+
+                    <button
+                        class="filter-button"
+                        data-category="dice"
+                    >
+                        🎲 Dice
+                    </button>
+
+                    <button
+                        class="filter-button"
+                        data-category="cards"
+                    >
+                        🃏 Cards
+                    </button>
+
+                </div>
+
+
+                <!-- INFO -->
+                <div class="catalog-info">
+
+                    <strong>
+                        ហ្គេមទាំងអស់
+                    </strong>
+
+                    <span
+                        id="catalogCount"
+                        class="catalog-count"
+                    >
+                        0 Games
+                    </span>
+
+                </div>
+
+
+                <!-- GAME GRID -->
+                <div
+                    id="catalogGrid"
+                    class="catalog-grid"
+                ></div>
+
+            </div>
+
+        </section>
+
+        <!-- =====================================
+             WALLET PAGE
+        ===================================== -->
+
+        <section
+            data-page-view="wallet"
+            id="walletPage"
+            style="display:none;"
+        >
+
+            <div class="main-container">
+
+                <div class="catalog-header">
+
+                    <h1>
+                        💰 Wallet
+                    </h1>
+
+                    <p>
+                        គ្រប់គ្រង Balance និងប្រវត្តិប្រតិបត្តិការ
+                    </p>
+
+                </div>
+
+
+                <div class="wallet-placeholder">
+
+                    <div>
+                        💰
+                    </div>
+
+                    <h2>
+                        Wallet
+                    </h2>
+
+                    <p>
+                        Wallet System នឹងបង្កើតនៅជំហានបន្ទាប់
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             PROFILE PAGE
+        ===================================== -->
+
+        <section
+            data-page-view="profile"
+            id="profilePage"
+            style="display:none;"
+        >
+
+            <div class="main-container">
+
+                <div class="catalog-header">
+
+                    <h1>
+                        👤 Profile
+                    </h1>
+
+                    <p>
+                        គ្រប់គ្រងគណនីរបស់អ្នក
+                    </p>
+
+                </div>
+
+
+                <div class="profile-placeholder">
+
+                    <div class="profile-avatar">
+                        👤
+                    </div>
+
+                    <h2>
+                        Player
+                    </h2>
+
+                    <p>
+                        Level 1
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             HISTORY PAGE
+        ===================================== -->
+
+        <section
+            data-page-view="history"
+            id="historyPage"
+            style="display:none;"
+        >
+
+            <div class="main-container">
+
+                <h1>
+                    📜 Game History
+                </h1>
+
+                <p>
+                    ប្រវត្តិការលេងហ្គេម
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             SETTINGS PAGE
+        ===================================== -->
+
+        <section
+            data-page-view="settings"
+            id="settingsPage"
+            style="display:none;"
+        >
+
+            <div class="main-container">
+
+                <h1>
+                    ⚙️ Settings
+                </h1>
+
+                <p>
+                    ការកំណត់កម្មវិធី
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================
+         BOTTOM NAVIGATION
+    ====================================== -->
+
+    <nav class="bottom-navigation">
+
+        <button
+            class="nav-item active"
+            data-page="home"
+        >
+
+            <span class="nav-icon">
+                🏠
+            </span>
+
+            <span class="nav-label">
+                ទំព័រដើម
+            </span>
+
+        </button>
+
+
+        <button
+            class="nav-item"
+            data-page="games"
+        >
+
+            <span class="nav-icon">
+                🎮
+            </span>
+
+            <span class="nav-label">
+                ហ្គេម
+            </span>
+
+        </button>
+
+
+        <button
+            class="nav-item"
+            data-page="wallet"
+        >
+
+            <span class="nav-icon">
+                👛
+            </span>
+
+            <span class="nav-label">
+                Wallet
+            </span>
+
+        </button>
+
+
+        <button
+            class="nav-item"
+            data-page="profile"
+        >
+
+            <span class="nav-icon">
+                👤
+            </span>
+
+            <span class="nav-label">
+                Profile
+            </span>
+
+        </button>
+
+    </nav>
+
+
+    <!-- =================================
+         TOAST NOTIFICATION
+    ================================== -->
+
+    <div
+        class="toast"
+        id="toast"
+    >
+
+        <span id="toastIcon">
+            ✓
+        </span>
+
+        <span id="toastMessage">
+            Success
+        </span>
+
+    </div>
+
+
+</div>
+
+
+    <!-- =================================
+         SCRIPT LOADING ORDER
+    ================================== -->
+
+    <!-- Load Configuration & Utilities First -->
+
+    <script src="js/config.js"></script>
+
+    <script src="js/storage.js"></script>
+
+
+    <!-- Load Core Logic & Components -->
+
+    <script src="js/router.js"></script>
+
+    <script src="js/game-catalog.js"></script>
+
+
+    <!-- Load Main App Controller Last -->
+
+    <script src="js/app.js"></script>
+
+
+</body>
+
+</html>

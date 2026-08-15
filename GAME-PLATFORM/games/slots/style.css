@@ -1,0 +1,1039 @@
+/* =========================================
+   CLASSIC SLOTS
+   STEP 6.2
+========================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    font-family: Arial, "Kantumruy Pro", sans-serif;
+    background: #070817;
+    color: #ffffff;
+    overflow-x: hidden;
+    user-select: none;
+}
+
+
+/* =========================================
+   APP
+========================================= */
+
+.slot-app {
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at 50% -10%,
+            rgba(124, 58, 237, 0.38),
+            transparent 42%
+        ),
+        radial-gradient(
+            circle at 0% 50%,
+            rgba(37, 99, 235, 0.12),
+            transparent 35%
+        ),
+        #070817;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.slot-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    height: 70px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 14px;
+
+    background: rgba(7, 8, 23, 0.94);
+
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+
+.header-btn {
+    width: 44px;
+    height: 44px;
+
+    display: grid;
+    place-items: center;
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.09);
+
+    border-radius: 13px;
+
+    background:
+        rgba(255, 255, 255, 0.06);
+
+    color: #ffffff;
+
+    font-size: 22px;
+
+    transition:
+        0.2s ease;
+}
+
+
+.header-btn:active {
+    transform: scale(0.92);
+}
+
+
+.game-title {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.game-icon {
+    width: 43px;
+    height: 43px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #2563eb
+        );
+
+    box-shadow:
+        0 6px 20px
+        rgba(124, 58, 237, 0.3);
+
+    font-size: 23px;
+}
+
+
+.game-title-text strong {
+    display: block;
+
+    font-size: 15px;
+    font-weight: 800;
+}
+
+
+.game-title-text small {
+    display: block;
+
+    margin-top: 2px;
+
+    color:
+        rgba(255, 255, 255, 0.45);
+
+    font-size: 8px;
+
+    letter-spacing: 2px;
+}
+
+
+/* =========================================
+   MAIN
+========================================= */
+
+.slot-main {
+    width: 100%;
+    max-width: 520px;
+
+    margin: 0 auto;
+
+    padding:
+        15px 15px 45px;
+}
+
+
+/* =========================================
+   BALANCE
+========================================= */
+
+.balance-card {
+    width: 100%;
+
+    min-height: 72px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding:
+        12px 16px;
+
+    margin-bottom: 14px;
+
+    border-radius: 17px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(124, 58, 237, 0.22),
+            rgba(37, 99, 235, 0.12)
+        );
+
+    border:
+        1px solid
+        rgba(139, 92, 246, 0.28);
+
+    box-shadow:
+        0 10px 30px
+        rgba(0, 0, 0, 0.2);
+}
+
+
+.balance-left {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.balance-label {
+    color:
+        rgba(255, 255, 255, 0.48);
+
+    font-size: 10px;
+}
+
+
+.balance-left strong {
+    font-size: 23px;
+
+    letter-spacing: 0.5px;
+}
+
+
+.balance-icon {
+    width: 43px;
+    height: 43px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 12px;
+
+    background:
+        rgba(255, 255, 255, 0.07);
+
+    font-size: 21px;
+}
+
+
+/* =========================================
+   SLOT MACHINE
+========================================= */
+
+.slot-machine {
+    position: relative;
+
+    padding:
+        19px 13px 18px;
+
+    border-radius: 24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #24114f,
+            #100b27 65%,
+            #0b0920
+        );
+
+    border:
+        2px solid
+        rgba(168, 85, 247, 0.35);
+
+    box-shadow:
+        0 20px 45px
+        rgba(0, 0, 0, 0.42),
+
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.08);
+}
+
+
+/* =========================================
+   MACHINE TITLE
+========================================= */
+
+.machine-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 15px;
+
+    margin-bottom: 15px;
+}
+
+
+.machine-title strong {
+    color: #f5d0fe;
+
+    font-size: 14px;
+
+    letter-spacing: 3px;
+}
+
+
+.machine-title span {
+    font-size: 14px;
+
+    filter:
+        drop-shadow(
+            0 0 6px
+            rgba(250, 204, 21, 0.5)
+        );
+}
+
+
+/* =========================================
+   REELS
+========================================= */
+
+.reels {
+    position: relative;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 8px;
+
+    padding: 9px;
+
+    border-radius: 18px;
+
+    background:
+        #05050c;
+
+    border:
+        2px solid
+        rgba(255, 255, 255, 0.07);
+
+    box-shadow:
+        inset 0 0 25px
+        rgba(0, 0, 0, 0.8);
+}
+
+
+/*
+   Center payline glow
+*/
+
+.reels::after {
+    content: "";
+
+    position: absolute;
+
+    left: 7px;
+    right: 7px;
+
+    top: 50%;
+
+    height: 2px;
+
+    transform:
+        translateY(-50%);
+
+    background:
+        rgba(250, 204, 21, 0.75);
+
+    box-shadow:
+        0 0 8px
+        rgba(250, 204, 21, 0.55);
+
+    pointer-events: none;
+
+    opacity: 0.55;
+}
+
+
+.reel {
+    position: relative;
+
+    height: 125px;
+
+    overflow: hidden;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #e5e7eb 48%,
+            #cbd5e1
+        );
+
+    box-shadow:
+        inset 0 0 14px
+        rgba(0, 0, 0, 0.35);
+}
+
+
+.reel-window {
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+    place-items: center;
+}
+
+
+.reel-symbol {
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+    place-items: center;
+
+    color: #111827;
+
+    font-size: 48px;
+
+    text-shadow:
+        0 3px 5px
+        rgba(0, 0, 0, 0.22);
+
+    transition:
+        transform 0.15s ease;
+}
+
+
+/* =========================================
+   SPINNING EFFECT
+========================================= */
+
+.reel.spinning {
+    animation:
+        reelShake
+        0.08s
+        linear
+        infinite;
+}
+
+
+.reel.spinning .reel-symbol {
+    filter: blur(2px);
+
+    transform:
+        scaleY(1.12);
+}
+
+
+@keyframes reelShake {
+
+    0% {
+        transform:
+            translateY(-3px);
+    }
+
+    50% {
+        transform:
+            translateY(3px);
+    }
+
+    100% {
+        transform:
+            translateY(-3px);
+    }
+}
+
+
+/* =========================================
+   WIN REEL
+========================================= */
+
+.reel.win {
+    animation:
+        reelWin
+        0.6s
+        ease;
+}
+
+
+@keyframes reelWin {
+
+    0% {
+        transform: scale(1);
+    }
+
+    35% {
+        transform: scale(1.07);
+    }
+
+    70% {
+        transform: scale(0.98);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+/* =========================================
+   PAYLINE
+========================================= */
+
+.payline {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    margin:
+        11px 3px 7px;
+}
+
+
+.payline span {
+    flex: 1;
+
+    height: 1px;
+
+    background:
+        rgba(250, 204, 21, 0.4);
+}
+
+
+.payline-label {
+    color: #facc15;
+
+    font-size: 7px;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+}
+
+
+/* =========================================
+   RESULT
+========================================= */
+
+.result-box {
+    min-height: 27px;
+
+    display: grid;
+    place-items: center;
+
+    text-align: center;
+}
+
+
+.result-box span {
+    color:
+        rgba(255, 255, 255, 0.62);
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    transition:
+        0.2s ease;
+}
+
+
+.result-box.win span {
+    color: #facc15;
+
+    font-size: 14px;
+
+    animation:
+        winMessage
+        0.5s
+        ease;
+}
+
+
+.result-box.lose span {
+    color:
+        rgba(255, 255, 255, 0.45);
+}
+
+
+@keyframes winMessage {
+
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.18);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+/* =========================================
+   BET SECTION
+========================================= */
+
+.bet-section {
+    margin-top: 14px;
+
+    padding: 14px;
+
+    border-radius: 16px;
+
+    background:
+        rgba(255, 255, 255, 0.035);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.07);
+}
+
+
+.bet-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 9px;
+}
+
+
+.bet-header span {
+    color:
+        rgba(255, 255, 255, 0.45);
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+}
+
+
+.bet-header strong {
+    color: #a78bfa;
+
+    font-size: 14px;
+}
+
+
+.bet-controls {
+    display: grid;
+
+    grid-template-columns:
+        52px 1fr 52px;
+
+    gap: 8px;
+}
+
+
+.bet-btn {
+    height: 48px;
+
+    border-radius: 12px;
+
+    color: white;
+
+    background:
+        rgba(124, 58, 237, 0.22);
+
+    border:
+        1px solid
+        rgba(124, 58, 237, 0.35);
+
+    font-size: 24px;
+
+    transition:
+        0.2s ease;
+}
+
+
+.bet-btn:active {
+    transform: scale(0.93);
+}
+
+
+.bet-btn:disabled {
+    opacity: 0.4;
+}
+
+
+.bet-display {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    border-radius: 12px;
+
+    background:
+        rgba(0, 0, 0, 0.22);
+}
+
+
+.bet-display small {
+    color:
+        rgba(255, 255, 255, 0.35);
+
+    font-size: 7px;
+}
+
+
+.bet-display strong {
+    color: white;
+
+    font-size: 18px;
+}
+
+
+.bet-display span {
+    color:
+        rgba(255, 255, 255, 0.3);
+
+    font-size: 7px;
+}
+
+
+/* =========================================
+   SPIN BUTTON
+========================================= */
+
+.spin-btn {
+    width: 100%;
+    height: 62px;
+
+    margin-top: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    border-radius: 17px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #9333ea
+        );
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.15);
+
+    box-shadow:
+        0 10px 28px
+        rgba(124, 58, 237, 0.3);
+
+    transition:
+        transform 0.15s ease,
+        opacity 0.2s ease;
+}
+
+
+.spin-btn:active {
+    transform: scale(0.97);
+}
+
+
+.spin-btn:disabled {
+    opacity: 0.48;
+
+    box-shadow: none;
+
+    cursor: not-allowed;
+}
+
+
+.spin-icon {
+    font-size: 22px;
+}
+
+
+.spin-btn strong {
+    font-size: 17px;
+
+    letter-spacing: 2px;
+}
+
+
+/* =========================================
+   GAME INFO
+========================================= */
+
+.game-info {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 8px;
+
+    margin-top: 12px;
+}
+
+
+.info-item {
+    min-height: 72px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    border-radius: 13px;
+
+    background:
+        rgba(255, 255, 255, 0.035);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+}
+
+
+.info-item span {
+    font-size: 19px;
+}
+
+
+.info-item small {
+    color:
+        rgba(255, 255, 255, 0.43);
+
+    font-size: 7px;
+}
+
+
+/* =========================================
+   PAYTABLE
+========================================= */
+
+.paytable {
+    margin-top: 17px;
+
+    padding: 15px;
+
+    border-radius: 17px;
+
+    background:
+        rgba(255, 255, 255, 0.035);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+}
+
+
+.section-heading {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    margin-bottom: 11px;
+}
+
+
+.section-heading span {
+    font-size: 16px;
+}
+
+
+.section-heading strong {
+    font-size: 12px;
+
+    letter-spacing: 1px;
+}
+
+
+.paytable-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 7px;
+}
+
+
+.pay-item {
+    min-height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding:
+        7px 9px;
+
+    border-radius: 9px;
+
+    background:
+        rgba(0, 0, 0, 0.18);
+}
+
+
+.pay-item span {
+    font-size: 16px;
+}
+
+
+.pay-item strong {
+    color: #facc15;
+
+    font-size: 10px;
+}
+
+
+/* =========================================
+   DEMO NOTICE
+========================================= */
+
+.demo-notice {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    margin-top: 13px;
+
+    padding:
+        9px 11px;
+
+    border-radius: 10px;
+
+    background:
+        rgba(59, 130, 246, 0.07);
+
+    border:
+        1px solid
+        rgba(59, 130, 246, 0.12);
+}
+
+
+.demo-notice span {
+    font-size: 13px;
+}
+
+
+.demo-notice p {
+    color:
+        rgba(255, 255, 255, 0.38);
+
+    font-size: 8px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (min-width: 600px) {
+
+    .slot-main {
+        padding-top: 20px;
+    }
+
+    .reel {
+        height: 155px;
+    }
+
+    .reel-symbol {
+        font-size: 60px;
+    }
+
+}
+
+
+@media (max-width: 360px) {
+
+    .slot-main {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .slot-header {
+        padding:
+            0 10px;
+    }
+
+    .reel {
+        height: 105px;
+    }
+
+    .reel-symbol {
+        font-size: 39px;
+    }
+
+    .game-title-text strong {
+        font-size: 13px;
+    }
+
+    .pay-item span {
+        font-size: 14px;
+    }
+
+}
+
+
+/* =========================================
+   SAFE AREA
+========================================= */
+
+@supports (
+    padding-bottom:
+    env(safe-area-inset-bottom)
+) {
+
+    .slot-main {
+        padding-bottom:
+            calc(
+                45px +
+                env(safe-area-inset-bottom)
+            );
+    }
+
+}

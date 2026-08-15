@@ -1,0 +1,133 @@
+/* =========================================
+   BOTTOM NAVIGATION
+========================================= */
+
+.bottom-navigation {
+
+    position: fixed;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height:
+        var(--bottom-nav-height);
+
+    z-index: 1000;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    background:
+        rgba(8, 11, 22, 0.94);
+
+    border-top:
+        1px solid var(--border-color);
+
+    backdrop-filter:
+        blur(20px);
+
+    -webkit-backdrop-filter:
+        blur(20px);
+
+}
+
+
+.nav-item {
+
+    position: relative;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 4px;
+
+    color:
+        var(--text-muted);
+
+    background: transparent;
+
+    transition:
+        color var(--transition-normal);
+
+}
+
+
+.nav-icon {
+
+    font-size: 20px;
+
+    line-height: 1;
+
+    transition:
+        transform var(--transition-normal);
+
+}
+
+
+.nav-label {
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+}
+
+
+.nav-item.active {
+
+    color:
+        var(--primary-light);
+
+}
+
+
+.nav-item.active .nav-icon {
+
+    transform:
+        translateY(-2px) scale(1.08);
+
+}
+
+
+.nav-item.active::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    width: 30px;
+    height: 3px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--primary-color),
+            var(--secondary-color)
+        );
+
+    border-radius:
+        0 0 5px 5px;
+
+}
+
+
+.nav-item:active {
+
+    transform: scale(0.94);
+
+}

@@ -31,3 +31,15 @@ git commit -m "Update full index.html"
 git push origin main
 ls
 git push -f origin master:main
+cd "/public"
+git add .
+git commit -m "Update full index.html"
+git push origin main
+npm i
+run js/router.js
+apk add nodejs
+find . -name "*.js" -exec node -c {} +
+for f in $(find . -name "*.js"); do echo "📄 Checking: $f"; node -c "$f"; done
+for f in $(find . -name "*.js"); do echo "📄 Checking: $f"; node -c "$f"; done
+for f in $(find . -name "*.js"); do echo "📄 Checking: $f"; node -c "$f"; done
+for f in $(find . -name "*.js"); do echo "📄 Checking: $f"; node -c "$f"; done

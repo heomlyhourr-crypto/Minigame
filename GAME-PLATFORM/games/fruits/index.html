@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="km">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width,
+        initial-scale=1.0,
+        maximum-scale=1.0,
+        user-scalable=no"
+    >
+
+    <title>Fruit Slots</title>
+
+    <meta
+        name="theme-color"
+        content="#07120b"
+    >
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+<body>
+
+<div class="fruit-app">
+
+
+    <!-- HEADER -->
+
+    <header class="fruit-header">
+
+        <button
+            id="backBtn"
+            class="header-btn"
+            type="button"
+        >
+            ←
+        </button>
+
+
+        <div class="game-title">
+
+            <div class="game-icon">
+                🍒
+            </div>
+
+            <div>
+
+                <strong>
+                    Fruit Slots
+                </strong>
+
+                <small>
+                    FRUIT PARTY
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <button
+            id="soundBtn"
+            class="header-btn"
+            type="button"
+        >
+            🔊
+        </button>
+
+    </header>
+
+
+
+    <!-- MAIN -->
+
+    <main class="fruit-main">
+
+
+        <!-- BALANCE -->
+
+        <section class="balance-card">
+
+            <div>
+
+                <span>
+                    Virtual Credits
+                </span>
+
+                <strong id="balance">
+                    1,000
+                </strong>
+
+            </div>
+
+            <div class="balance-icon">
+                💰
+            </div>
+
+        </section>
+
+
+
+        <!-- MACHINE -->
+
+        <section class="fruit-machine">
+
+
+            <div class="machine-title">
+
+                <span>🍓</span>
+
+                <strong>
+                    FRUIT PARTY
+                </strong>
+
+                <span>🍉</span>
+
+            </div>
+
+
+            <!-- REELS -->
+
+            <div
+                class="reels"
+                id="reels"
+            >
+
+                <div
+                    class="reel"
+                    id="reel0"
+                >
+
+                    <div class="reel-window">
+
+                        <div
+                            class="reel-symbol"
+                            id="symbol0"
+                        >
+                            🍒
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="reel"
+                    id="reel1"
+                >
+
+                    <div class="reel-window">
+
+                        <div
+                            class="reel-symbol"
+                            id="symbol1"
+                        >
+                            🍋
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="reel"
+                    id="reel2"
+                >
+
+                    <div class="reel-window">
+
+                        <div
+                            class="reel-symbol"
+                            id="symbol2"
+                        >
+                            🍉
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PAYLINE -->
+
+            <div class="payline">
+
+                <span></span>
+
+                <strong>
+                    PAYLINE
+                </strong>
+
+                <span></span>
+
+            </div>
+
+
+            <!-- RESULT -->
+
+            <div
+                class="result-box"
+                id="resultBox"
+            >
+
+                <span id="resultMessage">
+                    សូមចុច SPIN
+                </span>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- BET -->
+
+        <section class="bet-section">
+
+            <div class="bet-header">
+
+                <span>
+                    BET AMOUNT
+                </span>
+
+                <strong id="betAmount">
+                    10
+                </strong>
+
+            </div>
+
+
+            <div class="bet-controls">
+
+                <button
+                    id="betMinus"
+                    class="bet-btn"
+                    type="button"
+                >
+                    −
+                </button>
+
+
+                <div class="bet-display">
+
+                    <small>
+                        BET
+                    </small>
+
+                    <strong id="betValue">
+                        10
+                    </strong>
+
+                    <span>
+                        CREDITS
+                    </span>
+
+                </div>
+
+
+                <button
+                    id="betPlus"
+                    class="bet-btn"
+                    type="button"
+                >
+                    +
+                </button>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- SPIN -->
+
+        <button
+            id="spinBtn"
+            class="spin-btn"
+            type="button"
+        >
+
+            <span>
+                🍒
+            </span>
+
+            <strong>
+                SPIN
+            </strong>
+
+        </button>
+
+
+
+        <!-- INFO -->
+
+        <section class="game-info">
+
+            <div class="info-item">
+
+                <span>
+                    🍎
+                </span>
+
+                <small>
+                    Fruit Reels
+                </small>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span>
+                    🎁
+                </span>
+
+                <small>
+                    Big Reward
+                </small>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span>
+                    💰
+                </span>
+
+                <small>
+                    Demo Credits
+                </small>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- PAYTABLE -->
+
+        <section class="paytable">
+
+            <div class="section-heading">
+
+                <span>
+                    🏆
+                </span>
+
+                <strong>
+                    FRUIT PAYTABLE
+                </strong>
+
+            </div>
+
+
+            <div class="paytable-grid">
+
+
+                <div class="pay-item">
+
+                    <span>
+                        🍒 🍒 🍒
+                    </span>
+
+                    <strong>
+                        ×2
+                    </strong>
+
+                </div>
+
+
+                <div class="pay-item">
+
+                    <span>
+                        🍋 🍋 🍋
+                    </span>
+
+                    <strong>
+                        ×3
+                    </strong>
+
+                </div>
+
+
+                <div class="pay-item">
+
+                    <span>
+                        🍊 🍊 🍊
+                    </span>
+
+                    <strong>
+                        ×4
+                    </strong>
+
+                </div>
+
+
+                <div class="pay-item">
+
+                    <span>
+                        🍉 🍉 🍉
+                    </span>
+
+                    <strong>
+                        ×5
+                    </strong>
+
+                </div>
+
+
+                <div class="pay-item">
+
+                    <span>
+                        🍇 🍇 🍇
+                    </span>
+
+                    <strong>
+                        ×8
+                    </strong>
+
+                </div>
+
+
+                <div class="pay-item">
+
+                    <span>
+                        ⭐ ⭐ ⭐
+                    </span>
+
+                    <strong>
+                        ×15
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- NOTICE -->
+
+        <div class="demo-notice">
+
+            <span>
+                ℹ️
+            </span>
+
+            <p>
+                Demo Game — Virtual Credits only
+            </p>
+
+        </div>
+
+
+    </main>
+
+</div>
+
+
+<script src="game.js"></script>
+
+</body>
+
+</html>

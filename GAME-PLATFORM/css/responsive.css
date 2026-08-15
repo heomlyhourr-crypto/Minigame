@@ -1,0 +1,159 @@
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (min-width: 600px) {
+
+    :root {
+
+        --page-padding: 24px;
+
+    }
+
+
+    .main-container {
+
+        padding:
+            28px var(--page-padding);
+
+    }
+
+
+    .wallet-card {
+
+        padding: 24px;
+
+    }
+
+
+    .balance-row strong {
+
+        font-size: 36px;
+
+    }
+
+
+    .game-grid {
+
+        grid-template-columns:
+            repeat(3, 1fr);
+
+        gap: 15px;
+
+    }
+
+
+    .category-grid {
+
+        grid-template-columns:
+            repeat(6, 1fr);
+
+    }
+
+}
+
+
+/* =========================================
+   DESKTOP
+========================================= */
+
+@media (min-width: 900px) {
+
+    :root {
+
+        --page-padding: 30px;
+
+    }
+
+
+    .app-header {
+
+        padding-left:
+            30px;
+
+        padding-right:
+            30px;
+
+    }
+
+
+    .main-container {
+
+        padding-top:
+            35px;
+
+    }
+
+
+    .game-grid {
+
+        grid-template-columns:
+            repeat(4, 1fr);
+
+    }
+
+
+    .quick-grid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+}
+
+
+/* =========================================
+   SMALL PHONES
+========================================= */
+
+@media (max-width: 360px) {
+
+    .brand-info {
+
+        display: none;
+
+    }
+
+
+    .main-container {
+
+        padding-left: 12px;
+        padding-right: 12px;
+
+    }
+
+
+    .game-image {
+
+        height: 110px;
+
+    }
+
+
+    .game-emoji {
+
+        font-size: 43px;
+
+    }
+
+
+    .balance-row strong {
+
+        font-size: 25px;
+
+    }
+
+
+    .category-card {
+
+        min-height: 85px;
+
+    }
+
+}

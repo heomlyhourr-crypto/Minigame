@@ -1,0 +1,401 @@
+/* =========================================
+   GLOBAL
+========================================= */
+
+html {
+
+    width: 100%;
+
+    min-height: 100%;
+
+    background:
+        var(--background-color);
+
+}
+
+
+body {
+
+    width: 100%;
+
+    min-height: 100vh;
+
+    color:
+        var(--text-primary);
+
+    background:
+        radial-gradient(
+            circle at 50% -10%,
+            rgba(124,58,237,0.16),
+            transparent 35%
+        ),
+        var(--background-color);
+
+    font-family:
+        var(--font-main);
+
+    overflow-x: hidden;
+
+    -webkit-tap-highlight-color:
+        transparent;
+
+    user-select: none;
+
+    -webkit-user-select: none;
+
+}
+
+
+/* =========================================
+   APP
+========================================= */
+
+#app {
+
+    width: 100%;
+
+    min-height: 100vh;
+
+}
+
+
+/* =========================================
+   MAIN
+========================================= */
+
+main {
+
+    width: 100%;
+
+    min-height: 100vh;
+
+    padding-top:
+        var(--header-height);
+
+    padding-bottom:
+        calc(
+            var(--bottom-nav-height) + 25px
+        );
+
+}
+
+
+.main-container {
+
+    width: 100%;
+
+    max-width:
+        var(--content-max-width);
+
+    margin:
+        0 auto;
+
+    padding:
+        20px var(--page-padding);
+
+}
+
+
+/* =========================================
+   WELCOME
+========================================= */
+
+.welcome-section {
+
+    margin-bottom: 18px;
+
+}
+
+
+.welcome-label {
+
+    color:
+        var(--primary-light);
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+}
+
+
+.welcome-section h1 {
+
+    margin-top: 5px;
+
+    font-size: 25px;
+
+    line-height: 1.2;
+
+    font-weight: 900;
+
+}
+
+
+.welcome-section p {
+
+    margin-top: 5px;
+
+    color:
+        var(--text-secondary);
+
+    font-size: 12px;
+
+}
+
+
+/* =========================================
+   WALLET
+========================================= */
+
+.wallet-card {
+
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #5520a8,
+            #37208b 55%,
+            #164e63
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,0.10);
+
+    border-radius:
+        var(--radius-large);
+
+    box-shadow:
+        0 10px 30px
+        rgba(82,32,168,0.25);
+
+}
+
+
+.wallet-background-circle {
+
+    position: absolute;
+
+    width: 200px;
+    height: 200px;
+
+    top: -130px;
+    right: -70px;
+
+    background:
+        rgba(255,255,255,0.08);
+
+    border-radius: 50%;
+
+}
+
+
+.wallet-header {
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+}
+
+
+.wallet-title {
+
+    color:
+        rgba(255,255,255,0.70);
+
+    font-size: 11px;
+
+}
+
+
+.balance-row {
+
+    display: flex;
+
+    align-items: baseline;
+
+    gap: 7px;
+
+    margin-top: 5px;
+
+}
+
+
+.balance-row strong {
+
+    font-size: 29px;
+
+    line-height: 1;
+
+    font-weight: 900;
+
+}
+
+
+.balance-row span {
+
+    font-size: 8px;
+
+    letter-spacing: 1px;
+
+    opacity: 0.7;
+
+}
+
+
+.wallet-symbol {
+
+    width: 52px;
+    height: 52px;
+
+    display: grid;
+
+    place-items: center;
+
+    background:
+        rgba(255,255,255,0.10);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.08);
+
+    border-radius: 15px;
+
+    font-size: 25px;
+
+}
+
+
+.wallet-divider {
+
+    height: 1px;
+
+    margin:
+        16px 0 10px;
+
+    background:
+        rgba(255,255,255,0.12);
+
+}
+
+
+.wallet-actions {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 7px;
+
+}
+
+
+.wallet-button {
+
+    min-height: 52px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 3px;
+
+    color: white;
+
+    background:
+        rgba(255,255,255,0.09);
+
+    border-radius: 11px;
+
+}
+
+
+.wallet-button:active {
+
+    transform:
+        scale(0.95);
+
+}
+
+
+.wallet-button-icon {
+
+    font-size: 17px;
+
+}
+
+
+.wallet-button > span:last-child {
+
+    font-size: 9px;
+
+    opacity: 0.85;
+
+}
+
+
+/* =========================================
+   SECTIONS
+========================================= */
+
+.quick-section,
+.games-section,
+.categories-section {
+
+    margin-top: 25px;
+
+}
+
+
+.section-heading {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 12px;
+
+}
+
+
+.section-heading h2 {
+
+    margin-top: 3px;
+
+    font-size: 16px;
+
+    font-weight: 800;
+
+}
+
+
+.section-small {
+
+    color:
+        var(--primary-light);
+
+    font-size: 7px;
+
+    font-weight: 900;
+
+    letter-spacing: 2px;
+
+}

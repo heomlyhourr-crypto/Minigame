@@ -1,0 +1,117 @@
+/* =========================================
+   PAGE SYSTEM
+========================================= */
+
+[data-page-view] {
+
+    width: 100%;
+
+    min-height: 100%;
+
+}
+
+
+.wallet-placeholder,
+.profile-placeholder {
+
+    margin-top: 30px;
+
+    padding: 40px 20px;
+
+    text-align: center;
+
+    background:
+        var(--surface-1);
+
+    border:
+        1px solid var(--border-color);
+
+    border-radius:
+        var(--radius-large);
+
+}
+
+
+.wallet-placeholder > div {
+
+    font-size: 60px;
+
+}
+
+
+.wallet-placeholder h2,
+.profile-placeholder h2 {
+
+    margin-top: 12px;
+
+    font-size: 20px;
+
+}
+
+
+.wallet-placeholder p,
+.profile-placeholder p {
+
+    margin-top: 8px;
+
+    color:
+        var(--text-muted);
+
+    font-size: 11px;
+
+}
+
+
+.profile-avatar {
+
+    width: 85px;
+
+    height: 85px;
+
+    margin: auto;
+
+    display: grid;
+
+    place-items: center;
+
+    font-size: 45px;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #06b6d4
+        );
+
+}
+
+
+#historyPage,
+#settingsPage {
+
+    padding: 20px;
+
+}
+
+
+#historyPage h1,
+#settingsPage h1 {
+
+    font-size: 22px;
+
+}
+
+
+#historyPage p,
+#settingsPage p {
+
+    margin-top: 8px;
+
+    color:
+        var(--text-muted);
+
+    font-size: 12px;
+
+}

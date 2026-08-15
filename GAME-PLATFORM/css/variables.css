@@ -1,0 +1,95 @@
+:root {
+
+    /* =====================================
+       COLORS
+    ====================================== */
+
+    --primary-color: #7c3aed;
+    --primary-light: #a78bfa;
+    --primary-dark: #5b21b6;
+
+    --secondary-color: #06b6d4;
+
+    --background-color: #080b16;
+
+    --surface-1: #0e1424;
+    --surface-2: #131b2e;
+    --surface-3: #1a253c;
+
+    --text-primary: #ffffff;
+    --text-secondary: #aeb7c9;
+    --text-muted: #69758b;
+
+    --success-color: #22c55e;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+
+    --border-color:
+        rgba(255,255,255,0.08);
+
+
+    /* =====================================
+       LAYOUT
+    ====================================== */
+
+    --header-height: 64px;
+
+    --bottom-nav-height: 70px;
+
+    --page-padding: 16px;
+
+    --content-max-width: 900px;
+
+
+    /* =====================================
+       RADIUS
+    ====================================== */
+
+    --radius-small: 9px;
+
+    --radius-medium: 15px;
+
+    --radius-large: 22px;
+
+    --radius-round: 999px;
+
+
+    /* =====================================
+       SHADOW
+    ====================================== */
+
+    --shadow-small:
+        0 5px 15px
+        rgba(0,0,0,0.20);
+
+    --shadow-medium:
+        0 10px 30px
+        rgba(0,0,0,0.30);
+
+
+    /* =====================================
+       ANIMATION
+    ====================================== */
+
+    --transition-fast:
+        0.15s ease;
+
+    --transition-normal:
+        0.25s ease;
+
+    --transition-slow:
+        0.4s ease;
+
+
+    /* =====================================
+       FONT
+    ====================================== */
+
+    --font-main:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+}

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="km">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width,
+        initial-scale=1.0,
+        maximum-scale=1.0,
+        user-scalable=no"
+    >
+
+    <title>Classic Slots</title>
+
+    <meta
+        name="theme-color"
+        content="#070817"
+    >
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================
+     CLASSIC SLOTS APP
+========================================= -->
+
+<div class="slot-app">
+
+
+    <!-- =====================================
+         HEADER
+    ====================================== -->
+
+    <header class="slot-header">
+
+
+        <button
+            class="header-btn"
+            id="backBtn"
+            type="button"
+            aria-label="Back"
+        >
+            ←
+        </button>
+
+
+        <div class="game-title">
+
+            <div class="game-icon">
+                🎰
+            </div>
+
+            <div class="game-title-text">
+
+                <strong>
+                    Classic Slots
+                </strong>
+
+                <small>
+                    LUCKY SPIN
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="header-btn"
+            id="soundBtn"
+            type="button"
+            aria-label="Sound"
+        >
+            🔊
+        </button>
+
+
+    </header>
+
+
+
+    <!-- =====================================
+         MAIN
+    ====================================== -->
+
+    <main class="slot-main">
+
+
+        <!-- =================================
+             BALANCE
+        ================================== -->
+
+        <section class="balance-card">
+
+            <div class="balance-left">
+
+                <span class="balance-label">
+                    Virtual Credits
+                </span>
+
+                <strong
+                    id="balance"
+                >
+                    1,000
+                </strong>
+
+            </div>
+
+
+            <div class="balance-icon">
+                💎
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================
+             SLOT MACHINE
+        ================================== -->
+
+        <section
+            class="slot-machine"
+            id="slotMachine"
+        >
+
+
+            <!-- MACHINE TITLE -->
+
+            <div class="machine-title">
+
+                <span>⭐</span>
+
+                <strong>
+                    CLASSIC
+                </strong>
+
+                <span>⭐</span>
+
+            </div>
+
+
+
+            <!-- REELS -->
+
+            <div
+                class="reels"
+                id="reels"
+            >
+
+
+                <!-- REEL 1 -->
+
+                <div
+                    class="reel"
+                    id="reel0"
+                >
+
+                    <div class="reel-window">
+
+                        <div
+                            class="reel-symbol"
+                            id="symbol0"
+                        >
+                            🍒
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- REEL 2 -->
+
+                <div
+                    class="reel"
+                    id="reel1"
+                >
+
+                    <div class="reel-window">
+
+                        <div
+                            class="reel-symbol"
+                            id="symbol1"
+                        >
+                            🍋
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- REEL 3 -->
+
+                <div
+                    class="reel"
+                    id="reel2"
+                >
+
+                    <div class="reel-window">
+
+                        <div
+                            class="reel-symbol"
+                            id="symbol2"
+                        >
+                            7️⃣
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- PAYLINE -->
+
+            <div class="payline">
+
+                <span></span>
+
+                <div class="payline-label">
+                    PAYLINE
+                </div>
+
+                <span></span>
+
+            </div>
+
+
+
+            <!-- RESULT -->
+
+            <div
+                class="result-box"
+                id="resultBox"
+            >
+
+                <span
+                    id="resultMessage"
+                >
+                    សូមចុច SPIN
+                </span>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =================================
+             BET
+        ================================== -->
+
+        <section class="bet-section">
+
+
+            <div class="bet-header">
+
+                <span>
+                    BET AMOUNT
+                </span>
+
+                <strong
+                    id="betAmount"
+                >
+                    10
+                </strong>
+
+            </div>
+
+
+            <div class="bet-controls">
+
+
+                <button
+                    class="bet-btn"
+                    id="betMinus"
+                    type="button"
+                >
+                    −
+                </button>
+
+
+                <div class="bet-display">
+
+                    <small>
+                        BET
+                    </small>
+
+                    <strong
+                        id="betValue"
+                    >
+                        10
+                    </strong>
+
+                    <span>
+                        CREDITS
+                    </span>
+
+                </div>
+
+
+                <button
+                    class="bet-btn"
+                    id="betPlus"
+                    type="button"
+                >
+                    +
+                </button>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =================================
+             SPIN BUTTON
+        ================================== -->
+
+        <button
+            class="spin-btn"
+            id="spinBtn"
+            type="button"
+        >
+
+            <span class="spin-icon">
+                🎰
+            </span>
+
+            <strong>
+                SPIN
+            </strong>
+
+        </button>
+
+
+
+        <!-- =================================
+             GAME INFO
+        ================================== -->
+
+        <section class="game-info">
+
+
+            <div class="info-item">
+
+                <span>
+                    🎯
+                </span>
+
+                <small>
+                    3 Reels
+                </small>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span>
+                    🏆
+                </span>
+
+                <small>
+                    Win Reward
+                </small>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span>
+                    💎
+                </span>
+
+                <small>
+                    Demo Credits
+                </small>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =================================
+             PAYTABLE
+        ================================== -->
+
+        <section class="paytable">
+
+
+            <div class="section-heading">
+
+                <span>
+                    🏆
+                </span>
+
+                <strong>
+                    PAYTABLE
+                </strong>
+
+            </div>
+
+
+            <div
+                class="paytable-grid"
+                id="paytableGrid"
+            >
+
+
+                <div class="pay-item">
+
+                    <span>
+                        🍒 🍒 🍒
+                    </span>
+
+                    <strong>
+                        ×2
+                    </strong>
+
+                </div>
+
+
+                <div class="pay-item">
+
+                    <span>
+                        🍋 🍋 🍋
+                    </span>
+
+                    <strong>
+                        ×3
+                    </strong>
+
+                </div>
+
+
+                <div class="pay-item">
+
+                    <span>
+                        🍊 🍊 🍊
+                    </span>
+
+                    <strong>
+                        ×4
+                    </strong>
+
+                </div>
+
+
+                <div class="pay-item">
+
+                    <span>
+                        🔔 🔔 🔔
+                    </span>
+
+                    <strong>
+                        ×5
+                    </strong>
+
+                </div>
+
+
+                <div class="pay-item">
+
+                    <span>
+                        💎 💎 💎
+                    </span>
+
+                    <strong>
+                        ×8
+                    </strong>
+
+                </div>
+
+
+                <div class="pay-item">
+
+                    <span>
+                        7️⃣ 7️⃣ 7️⃣
+                    </span>
+
+                    <strong>
+                        ×15
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =================================
+             DEMO NOTICE
+        ================================== -->
+
+        <div class="demo-notice">
+
+            <span>
+                ℹ️
+            </span>
+
+            <p>
+                Demo Game — Virtual Credits only
+            </p>
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+
+<!-- =========================================
+     GAME JAVASCRIPT
+========================================= -->
+
+<script src="game.js"></script>
+
+
+</body>
+
+</html>

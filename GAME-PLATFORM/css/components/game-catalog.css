@@ -1,0 +1,714 @@
+/* =========================================
+   GAME CATALOG
+========================================= */
+
+.catalog-page {
+
+    padding-bottom: 20px;
+
+}
+
+
+/* =========================================
+   CATALOG HEADER
+========================================= */
+
+.catalog-header {
+
+    margin-bottom: 18px;
+
+}
+
+
+.catalog-header h1 {
+
+    font-size: 25px;
+
+    font-weight: 900;
+
+}
+
+
+.catalog-header p {
+
+    margin-top: 5px;
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+
+}
+
+
+/* =========================================
+   SEARCH
+========================================= */
+
+.game-search {
+
+    position: relative;
+
+    margin-bottom: 15px;
+
+}
+
+
+.game-search input {
+
+    width: 100%;
+
+    height: 46px;
+
+    padding:
+        0 15px 0 44px;
+
+    color: var(--text-primary);
+
+    background:
+        var(--surface-1);
+
+    border:
+        1px solid var(--border-color);
+
+    border-radius:
+        13px;
+
+    outline: none;
+
+    font-size: 12px;
+
+    transition:
+        border-color var(--transition-fast, 0.15s ease);
+
+}
+
+
+.game-search input::placeholder {
+
+    color:
+        var(--text-muted);
+
+}
+
+
+.game-search input:focus {
+
+    border-color:
+        rgba(124, 58, 237, 0.6);
+
+}
+
+
+.search-icon {
+
+    position: absolute;
+
+    left: 15px;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    color:
+        var(--text-muted);
+
+    font-size: 17px;
+
+    pointer-events: none;
+
+}
+
+
+/* =========================================
+   FILTER
+========================================= */
+
+.category-filter {
+
+    display: flex;
+
+    gap: 8px;
+
+    overflow-x: auto;
+
+    padding-bottom: 4px;
+
+    scrollbar-width: none;
+
+}
+
+
+.category-filter::-webkit-scrollbar {
+
+    display: none;
+
+}
+
+
+.filter-button {
+
+    flex-shrink: 0;
+
+    height: 35px;
+
+    padding:
+        0 14px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border:
+        1px solid var(--border-color);
+
+    border-radius:
+        10px;
+
+    outline: none;
+
+    color:
+        var(--text-secondary);
+
+    background:
+        var(--surface-1);
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    user-select: none;
+
+    -webkit-tap-highlight-color: transparent;
+
+    transition:
+        transform var(--transition-fast, 0.15s ease),
+        background-color var(--transition-fast, 0.15s ease);
+
+}
+
+
+.filter-button.active {
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary-color),
+            var(--primary-dark)
+        );
+
+    border-color:
+        transparent;
+
+}
+
+
+.filter-button:active {
+
+    transform:
+        scale(0.95);
+
+}
+
+
+/* =========================================
+   CATALOG INFO
+========================================= */
+
+.catalog-info {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin:
+        20px 0 12px;
+
+}
+
+
+.catalog-info strong {
+
+    font-size: 14px;
+
+}
+
+
+.catalog-count {
+
+    color:
+        var(--text-muted);
+
+    font-size: 10px;
+
+}
+
+
+/* =========================================
+   CATALOG GRID
+========================================= */
+
+.catalog-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+
+}
+
+
+/* =========================================
+   CATALOG CARD
+========================================= */
+
+.catalog-game-card {
+
+    position: relative;
+
+    overflow: hidden;
+
+    cursor: pointer;
+
+    user-select: none;
+
+    background:
+        var(--surface-1);
+
+    border:
+        1px solid var(--border-color);
+
+    border-radius:
+        var(--radius-medium);
+
+    box-shadow:
+        var(--shadow-small);
+
+    transition:
+        transform var(--transition-fast, 0.15s ease);
+
+}
+
+
+.catalog-game-card:active {
+
+    transform:
+        scale(0.97);
+
+}
+
+
+.catalog-game-cover {
+
+    position: relative;
+
+    height: 125px;
+
+    display: grid;
+
+    place-items: center;
+
+    overflow: hidden;
+
+}
+
+
+.catalog-game-cover::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 110px;
+
+    height: 110px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.08);
+
+}
+
+
+.catalog-game-cover::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0.35),
+            transparent 60%
+        );
+
+}
+
+
+.cover-slots {
+
+    background:
+        linear-gradient(
+            135deg,
+            #35206b,
+            #7c3aed
+        );
+
+}
+
+
+.cover-scratch {
+
+    background:
+        linear-gradient(
+            135deg,
+            #164e63,
+            #0891b2
+        );
+
+}
+
+
+.cover-wheel {
+
+    background:
+        linear-gradient(
+            135deg,
+            #064e3b,
+            #059669
+        );
+
+}
+
+
+.cover-dice {
+
+    background:
+        linear-gradient(
+            135deg,
+            #7c2d12,
+            #ea580c
+        );
+
+}
+
+
+.cover-cards {
+
+    background:
+        linear-gradient(
+            135deg,
+            #172554,
+            #2563eb
+        );
+
+}
+
+
+.catalog-game-icon {
+
+    position: relative;
+
+    z-index: 2;
+
+    font-size: 50px;
+
+    filter:
+        drop-shadow(
+            0 8px 8px
+            rgba(0, 0, 0, 0.35)
+        );
+
+}
+
+
+/* =========================================
+   TAG
+========================================= */
+
+.catalog-tag {
+
+    position: absolute;
+
+    z-index: 5;
+
+    top: 9px;
+
+    left: 9px;
+
+    padding:
+        4px 7px;
+
+    color: white;
+
+    background:
+        var(--danger-color, #ef4444);
+
+    border-radius: 6px;
+
+    font-size: 7px;
+
+    font-weight: 900;
+
+}
+
+
+.catalog-tag.new {
+
+    background:
+        var(--success-color, #10b981);
+
+}
+
+
+.catalog-tag.soon {
+
+    background:
+        var(--warning-color, #f59e0b);
+
+}
+
+
+/* =========================================
+   CARD BODY
+========================================= */
+
+.catalog-game-body {
+
+    padding: 12px;
+
+}
+
+
+.catalog-game-title {
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+}
+
+
+.catalog-game-description {
+
+    min-height: 26px;
+
+    margin-top: 4px;
+
+    color:
+        var(--text-muted);
+
+    font-size: 9px;
+
+    line-height: 1.4;
+
+}
+
+
+.catalog-game-meta {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-top: 8px;
+
+}
+
+
+.game-rating {
+
+    color:
+        #fbbf24;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+}
+
+
+.game-plays {
+
+    color:
+        var(--text-muted);
+
+    font-size: 8px;
+
+}
+
+
+/* =========================================
+   CATALOG PLAY
+========================================= */
+
+.catalog-play-button {
+
+    width: 100%;
+
+    height: 35px;
+
+    margin-top: 10px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border: none;
+
+    outline: none;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary-color),
+            var(--primary-dark)
+        );
+
+    border-radius:
+        9px;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    user-select: none;
+
+    -webkit-tap-highlight-color: transparent;
+
+    transition:
+        transform var(--transition-fast, 0.15s ease);
+
+}
+
+
+.catalog-play-button:active:not(.disabled) {
+
+    transform: scale(0.96);
+
+}
+
+
+.catalog-play-button.disabled {
+
+    color:
+        var(--text-muted);
+
+    background:
+        var(--surface-3, #334155);
+
+    cursor: not-allowed;
+
+    opacity: 0.6;
+
+    pointer-events: none;
+
+}
+
+
+/* =========================================
+   EMPTY
+========================================= */
+
+.catalog-empty {
+
+    padding: 50px 20px;
+
+    text-align: center;
+
+    color:
+        var(--text-muted);
+
+}
+
+
+.catalog-empty-icon {
+
+    font-size: 40px;
+
+}
+
+
+.catalog-empty strong {
+
+    display: block;
+
+    margin-top: 10px;
+
+    color:
+        var(--text-secondary);
+
+    font-size: 13px;
+
+}
+
+
+.catalog-empty p {
+
+    margin-top: 5px;
+
+    font-size: 10px;
+
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (min-width: 600px) {
+
+    .catalog-grid {
+
+        grid-template-columns:
+            repeat(3, 1fr);
+
+        gap: 15px;
+
+    }
+
+}
+
+
+/* =========================================
+   DESKTOP
+========================================= */
+
+@media (min-width: 900px) {
+
+    .catalog-grid {
+
+        grid-template-columns:
+            repeat(4, 1fr);
+
+    }
+
+}
